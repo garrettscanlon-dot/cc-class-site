@@ -1,0 +1,1517 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Monday Morning Playbook — Live Demo</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@0,400;0,500;0,700&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --ink:         #0a0a0f;
+      --ink-90:      #16161f;
+      --ink-80:      #1e1e2a;
+      --ink-70:      #2a2a3a;
+      --ink-60:      #3a3a4e;
+      --ink-40:      #6b6b82;
+      --ink-30:      #8e8ea3;
+      --ink-20:      #b0b0c0;
+      --ink-10:      #d4d4de;
+      --white:       #f5f5f7;
+      --accent:      #6366f1;
+      --accent-dim:  #4f46e5;
+      --accent-glow: rgba(99,102,241,.15);
+      --accent-glow2:rgba(99,102,241,.08);
+      --mint:        #34d399;
+      --mint-dim:    rgba(52,211,153,.12);
+      --coral:       #f87171;
+      --coral-dim:   rgba(248,113,113,.12);
+      --amber:       #fbbf24;
+      --amber-dim:   rgba(251,191,36,.12);
+      --radius:      10px;
+      --radius-lg:   16px;
+      --radius-xl:   24px;
+      --font-display:'Instrument Serif', Georgia, serif;
+      --font-body:   'DM Sans', -apple-system, sans-serif;
+      --nav-height:  64px;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: var(--font-body);
+      background: var(--ink);
+      color: var(--ink-20);
+      font-size: 15px;
+      line-height: 1.6;
+      overflow-x: hidden;
+    }
+
+    /* ── NAV ── */
+    nav {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: rgba(10,10,15,.92);
+      backdrop-filter: blur(20px) saturate(180%);
+      -webkit-backdrop-filter: blur(20px) saturate(180%);
+      border-bottom: 1px solid rgba(255,255,255,.06);
+      padding: 0 24px;
+      height: var(--nav-height);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .nav-left { display: flex; align-items: center; gap: 20px; }
+
+    .logo {
+      font-family: var(--font-display);
+      font-size: 20px;
+      color: var(--white);
+      text-decoration: none;
+    }
+
+    .nav-back {
+      font-size: 13px;
+      color: var(--ink-40);
+      text-decoration: none;
+      font-weight: 500;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      transition: color .2s;
+      border-left: 1px solid var(--ink-70);
+      padding-left: 20px;
+    }
+    .nav-back:hover { color: var(--ink-20); }
+
+    .nav-right { display: flex; align-items: center; gap: 10px; }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-family: var(--font-body);
+      font-size: 13px;
+      font-weight: 600;
+      padding: 8px 18px;
+      border-radius: 7px;
+      border: 1px solid transparent;
+      cursor: pointer;
+      text-decoration: none;
+      transition: all .2s ease;
+    }
+
+    .btn-primary {
+      background: var(--accent);
+      color: var(--white);
+      border-color: var(--accent);
+      box-shadow: 0 0 16px var(--accent-glow);
+    }
+    .btn-primary:hover { background: var(--accent-dim); transform: translateY(-1px); }
+
+    .btn-ghost {
+      background: transparent;
+      color: var(--ink-20);
+      border-color: var(--ink-60);
+    }
+    .btn-ghost:hover { color: var(--white); border-color: var(--ink-30); background: rgba(255,255,255,.04); }
+
+    /* ── DEMO BANNER ── */
+    .demo-banner {
+      background: var(--accent-glow2);
+      border-bottom: 1px solid rgba(99,102,241,.15);
+      padding: 10px 24px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      font-size: 13px;
+      color: var(--ink-30);
+    }
+
+    .demo-banner-dot {
+      width: 6px; height: 6px;
+      border-radius: 50%;
+      background: var(--accent);
+      flex-shrink: 0;
+      animation: pulse 2s ease-in-out infinite;
+    }
+
+    .demo-banner strong { color: var(--accent); }
+
+    @keyframes pulse {
+      0%, 100% { opacity: .6; }
+      50% { opacity: 1; }
+    }
+
+    /* ── WARNING BANNER ── */
+    .warning-banner {
+      background: var(--amber-dim);
+      border-bottom: 1px solid rgba(251,191,36,.2);
+      padding: 10px 24px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 13px;
+      color: var(--amber);
+    }
+
+    .warning-banner--hidden { display: none !important; }
+
+    .warning-banner-icon { font-size: 14px; flex-shrink: 0; }
+
+    .warning-banner-close {
+      margin-left: auto;
+      background: none;
+      border: none;
+      color: var(--amber);
+      cursor: pointer;
+      font-size: 16px;
+      opacity: .7;
+      line-height: 1;
+      padding: 0 4px;
+    }
+    .warning-banner-close:hover { opacity: 1; }
+
+    /* ── APP SHELL ── */
+    .demo-shell {
+      display: flex;
+      min-height: calc(100vh - var(--nav-height) - 42px);
+    }
+
+    /* ── SIDEBAR ── */
+    .demo-sidebar {
+      width: 260px;
+      flex-shrink: 0;
+      background: var(--ink-90);
+      border-right: 1px solid var(--ink-70);
+      padding: 20px 16px;
+      position: sticky;
+      top: calc(var(--nav-height) + 42px);
+      height: calc(100vh - var(--nav-height) - 42px);
+      overflow-y: auto;
+    }
+
+    .sidebar-label {
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      color: var(--ink-40);
+      font-weight: 700;
+      margin-bottom: 12px;
+      padding: 0 4px;
+    }
+
+    .sidebar-divider {
+      height: 1px;
+      background: var(--ink-70);
+      margin: 20px 0;
+    }
+
+    /* Integration Toggle Rows */
+    .integration-toggle-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 10px 8px;
+      border-radius: var(--radius);
+      margin-bottom: 4px;
+      transition: background .2s;
+    }
+    .integration-toggle-row:hover { background: rgba(255,255,255,.03); }
+
+    .integration-info {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .integration-icon {
+      width: 28px; height: 28px;
+      border-radius: 7px;
+      background: var(--ink-80);
+      border: 1px solid var(--ink-70);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--ink-30);
+      flex-shrink: 0;
+    }
+
+    .integration-label {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--ink-10);
+    }
+
+    /* Toggle Switch */
+    .toggle-switch { position: relative; cursor: pointer; }
+    .toggle-switch input { display: none; }
+
+    .toggle-track {
+      width: 36px; height: 20px;
+      border-radius: 10px;
+      background: var(--ink-60);
+      transition: background .2s;
+      position: relative;
+    }
+
+    .toggle-switch input:checked + .toggle-track { background: var(--accent); }
+
+    .toggle-thumb {
+      width: 14px; height: 14px;
+      border-radius: 50%;
+      background: var(--white);
+      position: absolute;
+      top: 3px; left: 3px;
+      transition: transform .2s;
+      pointer-events: none;
+    }
+
+    .toggle-switch input:checked ~ .toggle-thumb,
+    .toggle-switch input:checked + .toggle-track + .toggle-thumb { transform: translateX(16px); }
+
+    /* Integration Status Cards */
+    .integration-status-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px;
+      border-radius: 8px;
+      margin-bottom: 4px;
+    }
+
+    .status-dot {
+      width: 7px; height: 7px;
+      border-radius: 50%;
+      flex-shrink: 0;
+    }
+    .status-dot--on { background: var(--mint); box-shadow: 0 0 6px rgba(52,211,153,.4); }
+    .status-dot--off { background: var(--coral); box-shadow: 0 0 6px rgba(248,113,113,.4); }
+
+    .status-name {
+      font-size: 12px;
+      color: var(--ink-30);
+      flex: 1;
+    }
+
+    .status-badge {
+      font-size: 10px;
+      font-weight: 600;
+      padding: 2px 7px;
+      border-radius: 100px;
+    }
+    .status-badge--on { background: var(--mint-dim); color: var(--mint); }
+    .status-badge--off { background: var(--coral-dim); color: var(--coral); }
+
+    /* ── MAIN CONTENT ── */
+    .demo-main {
+      flex: 1;
+      padding: 24px;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+      min-width: 0;
+    }
+
+    /* ── STATS BAR ── */
+    .stats-bar {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 12px;
+    }
+
+    .stat-tile {
+      background: var(--ink-90);
+      border: 1px solid var(--ink-70);
+      border-radius: var(--radius-lg);
+      padding: 18px 20px;
+      transition: border-color .2s;
+    }
+
+    .stat-tile-label {
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: .6px;
+      color: var(--ink-40);
+      margin-bottom: 6px;
+      font-weight: 600;
+    }
+
+    .stat-tile-value {
+      font-family: var(--font-display);
+      font-size: 26px;
+      color: var(--white);
+      line-height: 1;
+      margin-bottom: 4px;
+    }
+
+    .stat-tile-value--risk { color: var(--coral); }
+    .stat-tile-value--warn { color: var(--amber); }
+    .stat-tile-value--good { color: var(--mint); }
+    .stat-tile-value--muted { color: var(--ink-40); font-size: 20px; }
+
+    .stat-tile-sub {
+      font-size: 11px;
+      color: var(--ink-40);
+    }
+
+    .stat-tile-sub--disconnected {
+      font-style: italic;
+      color: var(--ink-60);
+    }
+
+    /* ── PANEL (shared card) ── */
+    .panel {
+      background: var(--ink-90);
+      border: 1px solid var(--ink-70);
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+    }
+
+    .panel-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 16px 20px;
+      border-bottom: 1px solid var(--ink-70);
+    }
+
+    .panel-title {
+      font-family: var(--font-display);
+      font-size: 18px;
+      color: var(--white);
+    }
+
+    .panel-meta {
+      font-size: 12px;
+      color: var(--ink-40);
+    }
+
+    .panel-count-badge {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 22px;
+      height: 22px;
+      padding: 0 7px;
+      border-radius: 100px;
+      background: var(--accent-glow);
+      color: var(--accent);
+      font-size: 12px;
+      font-weight: 700;
+    }
+
+    /* ── PRIORITY QUEUE ── */
+    .queue-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 14px;
+      padding: 16px 20px;
+      border-bottom: 1px solid rgba(255,255,255,.04);
+      transition: background .15s;
+    }
+    .queue-item:last-child { border-bottom: none; }
+    .queue-item:hover { background: rgba(255,255,255,.02); }
+
+    .queue-item--checked {
+      opacity: .4;
+    }
+    .queue-item--checked .queue-action { text-decoration: line-through; }
+
+    .queue-item--unavailable { opacity: .3; }
+
+    .queue-check {
+      width: 22px; height: 22px;
+      border-radius: 50%;
+      border: 2px solid var(--ink-60);
+      background: transparent;
+      cursor: pointer;
+      flex-shrink: 0;
+      margin-top: 1px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all .2s;
+      padding: 0;
+    }
+    .queue-check:hover { border-color: var(--accent); background: var(--accent-glow2); }
+    .queue-check--done { background: var(--mint-dim); border-color: var(--mint); }
+
+    .queue-check svg { display: none; }
+    .queue-check--done svg { display: block; }
+
+    .queue-item-body { flex: 1; min-width: 0; }
+
+    .queue-top {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      margin-bottom: 4px;
+    }
+
+    .health-dot {
+      width: 8px; height: 8px;
+      border-radius: 50%;
+      flex-shrink: 0;
+      margin-top: 5px;
+    }
+    .health-dot.red    { background: var(--coral); box-shadow: 0 0 6px rgba(248,113,113,.4); }
+    .health-dot.yellow { background: var(--amber); box-shadow: 0 0 6px rgba(251,191,36,.4); }
+    .health-dot.green  { background: var(--mint);  box-shadow: 0 0 6px rgba(52,211,153,.4); }
+
+    .queue-action {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--ink-10);
+      line-height: 1.4;
+    }
+
+    .queue-detail {
+      font-size: 12px;
+      color: var(--ink-40);
+      line-height: 1.5;
+      margin-bottom: 8px;
+    }
+
+    .queue-sources {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 5px;
+    }
+
+    .source-badge {
+      font-size: 10px;
+      font-weight: 600;
+      padding: 2px 8px;
+      border-radius: 5px;
+      background: var(--ink-80);
+      border: 1px solid var(--ink-70);
+      color: var(--ink-40);
+      transition: opacity .2s;
+    }
+
+    .source-badge--off {
+      opacity: .35;
+      text-decoration: line-through;
+    }
+
+    .queue-unavailable-label {
+      font-size: 11px;
+      color: var(--ink-60);
+      font-style: italic;
+      margin-top: 4px;
+    }
+
+    .queue-empty-state {
+      padding: 48px 20px;
+      text-align: center;
+    }
+
+    .queue-empty-icon {
+      width: 44px; height: 44px;
+      border-radius: 50%;
+      background: var(--mint-dim);
+      color: var(--mint);
+      font-size: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 14px;
+    }
+
+    .queue-empty-title {
+      font-family: var(--font-display);
+      font-size: 20px;
+      color: var(--white);
+      margin-bottom: 6px;
+    }
+
+    .queue-empty-sub {
+      font-size: 13px;
+      color: var(--ink-40);
+    }
+
+    /* ── ACCOUNT HEALTH TABLE ── */
+    .health-table-wrap { overflow-x: auto; }
+
+    .health-table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    .health-table th {
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: .8px;
+      color: var(--ink-40);
+      font-weight: 700;
+      padding: 12px 16px;
+      text-align: left;
+      border-bottom: 1px solid var(--ink-70);
+      white-space: nowrap;
+    }
+
+    .health-table td {
+      padding: 12px 16px;
+      font-size: 13px;
+      border-bottom: 1px solid rgba(255,255,255,.03);
+      vertical-align: middle;
+    }
+
+    .health-table tr:last-child td { border-bottom: none; }
+    .health-table tbody tr:hover td { background: rgba(255,255,255,.02); }
+
+    .acct-name {
+      font-weight: 600;
+      color: var(--ink-10);
+      white-space: nowrap;
+    }
+
+    .acct-csm {
+      font-size: 11px;
+      color: var(--ink-40);
+    }
+
+    .health-badge {
+      font-size: 10px;
+      font-weight: 700;
+      padding: 3px 9px;
+      border-radius: 100px;
+      text-transform: uppercase;
+      letter-spacing: .3px;
+      white-space: nowrap;
+    }
+    .health-badge.red    { background: var(--coral-dim); color: var(--coral); }
+    .health-badge.yellow { background: var(--amber-dim); color: var(--amber); }
+    .health-badge.green  { background: var(--mint-dim);  color: var(--mint); }
+
+    .usage-delta {
+      font-weight: 700;
+      font-size: 13px;
+    }
+    .usage-delta--up   { color: var(--mint); }
+    .usage-delta--down { color: var(--coral); }
+    .usage-delta--flat { color: var(--ink-40); }
+    .usage-delta--na   { color: var(--ink-60); font-style: italic; font-weight: 400; }
+
+    .renewal-pill {
+      font-size: 11px;
+      font-weight: 600;
+      padding: 3px 9px;
+      border-radius: 100px;
+      white-space: nowrap;
+    }
+    .renewal-pill--urgent { background: var(--coral-dim); color: var(--coral); }
+    .renewal-pill--soon   { background: var(--amber-dim); color: var(--amber); }
+    .renewal-pill--ok     { background: var(--ink-80); color: var(--ink-40); border: 1px solid var(--ink-70); }
+    .renewal-pill--na     { color: var(--ink-60); font-style: italic; }
+
+    /* ── SOURCE-DISCONNECTED ── */
+    .source-disconnected {
+      opacity: .3;
+      transition: opacity .2s;
+    }
+
+    .cell-na {
+      color: var(--ink-60);
+      font-style: italic;
+      font-size: 12px;
+    }
+
+    /* ── SLACK DRAFT ── */
+    .slack-draft-inner { position: relative; }
+
+    .slack-draft-body {
+      width: 100%;
+      background: var(--ink-80);
+      border: none;
+      border-radius: 0;
+      padding: 20px;
+      font-size: 13px;
+      font-family: 'DM Mono', 'Fira Code', 'Cascadia Code', monospace, var(--font-body);
+      color: var(--ink-20);
+      line-height: 1.75;
+      resize: vertical;
+      min-height: 220px;
+      outline: none;
+      white-space: pre-wrap;
+    }
+
+    .slack-draft-body:focus { background: var(--ink-70); }
+
+    .slack-draft-footer {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 14px 20px;
+      border-top: 1px solid var(--ink-70);
+    }
+
+    .btn-copy {
+      font-size: 13px;
+      font-weight: 600;
+      padding: 8px 18px;
+      border-radius: 7px;
+      border: 1px solid var(--ink-60);
+      background: transparent;
+      color: var(--ink-20);
+      cursor: pointer;
+      transition: all .2s;
+    }
+    .btn-copy:hover { border-color: var(--accent); color: var(--accent); }
+    .btn-copy--success { border-color: var(--mint); color: var(--mint); background: var(--mint-dim); }
+
+    .btn-reset {
+      font-size: 12px;
+      font-weight: 500;
+      padding: 7px 14px;
+      border-radius: 7px;
+      border: 1px solid var(--ink-70);
+      background: transparent;
+      color: var(--ink-40);
+      cursor: pointer;
+      transition: all .2s;
+    }
+    .btn-reset:hover { color: var(--ink-20); border-color: var(--ink-60); }
+
+    .draft-edited-badge {
+      font-size: 11px;
+      color: var(--amber);
+      padding: 3px 8px;
+      border: 1px solid rgba(251,191,36,.2);
+      border-radius: 5px;
+      background: var(--amber-dim);
+    }
+
+    .slack-disconnected-overlay {
+      position: absolute;
+      inset: 0;
+      background: rgba(10,10,15,.7);
+      backdrop-filter: blur(4px);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      border-radius: 0 0 var(--radius-lg) var(--radius-lg);
+    }
+
+    .slack-disconnected-overlay .overlay-icon {
+      font-size: 24px;
+      opacity: .4;
+    }
+
+    .slack-disconnected-overlay .overlay-text {
+      font-size: 13px;
+      color: var(--ink-30);
+    }
+
+    /* ── FOOTER ── */
+    footer {
+      border-top: 1px solid var(--ink-70);
+      padding: 32px 24px;
+    }
+
+    .footer-inner {
+      max-width: 1140px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .footer-brand {
+      font-family: var(--font-display);
+      font-size: 16px;
+      color: var(--ink-20);
+    }
+
+    .footer-links {
+      display: flex;
+      gap: 20px;
+      list-style: none;
+    }
+
+    .footer-links a {
+      font-size: 13px;
+      color: var(--ink-40);
+      text-decoration: none;
+      transition: color .2s;
+    }
+    .footer-links a:hover { color: var(--white); }
+
+    .footer-copy {
+      font-size: 13px;
+      color: var(--ink-60);
+    }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 768px) {
+      .demo-shell { flex-direction: column; }
+
+      .demo-sidebar {
+        width: 100%;
+        height: auto;
+        position: static;
+        border-right: none;
+        border-bottom: 1px solid var(--ink-70);
+        padding: 16px;
+      }
+
+      .sidebar-full { display: none; }
+
+      .integration-strip {
+        display: flex !important;
+        overflow-x: auto;
+        gap: 8px;
+        padding-bottom: 4px;
+      }
+
+      .strip-chip {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        padding: 6px 12px;
+        border-radius: 100px;
+        border: 1px solid var(--ink-70);
+        background: var(--ink-80);
+        font-size: 12px;
+        font-weight: 600;
+        white-space: nowrap;
+        cursor: pointer;
+        flex-shrink: 0;
+        transition: border-color .2s;
+        user-select: none;
+      }
+      .strip-chip.on { border-color: var(--accent); color: var(--ink-10); }
+      .strip-chip.off { color: var(--ink-40); }
+
+      .stats-bar { grid-template-columns: repeat(2, 1fr); }
+
+      .demo-main { padding: 16px; gap: 16px; }
+
+      .health-table th:nth-child(4),
+      .health-table td:nth-child(4) { display: none; }
+
+      .footer-inner { flex-direction: column; gap: 16px; text-align: center; }
+      .footer-links { flex-wrap: wrap; justify-content: center; }
+    }
+
+    @media (min-width: 769px) {
+      .integration-strip { display: none; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-left">
+    <a href="index.html" class="logo">Monday Morning Playbook</a>
+    <a href="index.html" class="nav-back">&#8592; Back to site</a>
+  </div>
+  <div class="nav-right">
+    <a href="index.html#cta" class="btn btn-ghost">See Pricing</a>
+    <a href="index.html#cta" class="btn btn-primary">Start Free Trial</a>
+  </div>
+</nav>
+
+<!-- DEMO BANNER -->
+<div class="demo-banner">
+  <span class="demo-banner-dot"></span>
+  <strong>Live demo</strong> &mdash; You're viewing a simulated Monday Morning Playbook environment. All account data is fictional.
+</div>
+
+<!-- WARNING BANNER -->
+<div class="warning-banner warning-banner--hidden" id="warning-banner">
+  <span class="warning-banner-icon">⚠</span>
+  <span id="warning-text">Integration disconnected — some signals may be missing.</span>
+  <button class="warning-banner-close" onclick="dismissWarning()" aria-label="Dismiss">&times;</button>
+</div>
+
+<!-- APP SHELL -->
+<div class="demo-shell">
+
+  <!-- SIDEBAR (desktop) -->
+  <aside class="demo-sidebar">
+    <div class="sidebar-full">
+      <div class="sidebar-label">Integrations</div>
+      <div id="integration-toggles"></div>
+
+      <div class="sidebar-divider"></div>
+
+      <div class="sidebar-label">Connection Status</div>
+      <div id="integration-status"></div>
+    </div>
+
+    <!-- Mobile: horizontal chip strip -->
+    <div class="integration-strip" id="integration-strip"></div>
+  </aside>
+
+  <!-- MAIN CONTENT -->
+  <main class="demo-main">
+
+    <!-- STATS BAR -->
+    <div class="stats-bar" id="stats-bar"></div>
+
+    <!-- PRIORITY QUEUE -->
+    <div class="panel" id="priority-queue-panel">
+      <div class="panel-header">
+        <span class="panel-title">Priority Queue</span>
+        <span id="queue-badge" class="panel-count-badge">6</span>
+      </div>
+      <div id="priority-queue-body"></div>
+    </div>
+
+    <!-- ACCOUNT HEALTH -->
+    <div class="panel" id="account-health-panel">
+      <div class="panel-header">
+        <span class="panel-title">Account Health</span>
+        <span class="panel-meta">Week-over-week usage delta</span>
+      </div>
+      <div class="health-table-wrap">
+        <table class="health-table">
+          <thead>
+            <tr>
+              <th>Account</th>
+              <th>Health</th>
+              <th>MRR</th>
+              <th>WoW Usage</th>
+              <th>Renewal</th>
+              <th>Signals</th>
+            </tr>
+          </thead>
+          <tbody id="health-table-body"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- SLACK DRAFT -->
+    <div class="panel" id="slack-draft-panel">
+      <div class="panel-header">
+        <span class="panel-title">Slack Draft</span>
+        <span class="panel-meta" id="slack-header-meta">Auto-generated &middot; review and post to #cs-team</span>
+      </div>
+      <div class="slack-draft-inner">
+        <textarea class="slack-draft-body" id="slack-draft-textarea" spellcheck="false"></textarea>
+        <div class="slack-disconnected-overlay" id="slack-overlay" style="display:none;">
+          <div class="overlay-icon">#</div>
+          <div class="overlay-text">Connect Slack to post this draft directly to your team channel</div>
+        </div>
+      </div>
+      <div class="slack-draft-footer">
+        <button class="btn-copy" id="btn-copy" onclick="copyToClipboard()">Copy to Clipboard</button>
+        <button class="btn-reset" id="btn-reset" onclick="resetDraft()" style="display:none;">Reset Draft</button>
+        <span class="draft-edited-badge" id="draft-edited-badge" style="display:none;">Edited</span>
+      </div>
+    </div>
+
+  </main>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-inner">
+    <span class="footer-brand">Monday Morning Playbook</span>
+    <ul class="footer-links">
+      <li><a href="index.html#how-it-works">How It Works</a></li>
+      <li><a href="index.html#features">Features</a></li>
+      <li><a href="index.html#proof">Customers</a></li>
+      <li><a href="#">Privacy</a></li>
+      <li><a href="#">Terms</a></li>
+    </ul>
+    <span class="footer-copy">&copy; 2026 Monday Morning Playbook</span>
+  </div>
+</footer>
+
+<script>
+// ── DATA ────────────────────────────────────────────────────────────────────
+
+var INTEGRATIONS = {
+  looker:     { label: 'Looker',     abbr: 'LK', connected: true },
+  salesforce: { label: 'Salesforce', abbr: 'SF', connected: true },
+  linear:     { label: 'Linear',     abbr: 'LN', connected: true },
+  gong:       { label: 'Gong',       abbr: 'GG', connected: true },
+  slack:      { label: 'Slack',      abbr: '#',  connected: true },
+};
+
+var ACCOUNTS = [
+  {
+    id: 'mesa-urgent-care',
+    name: 'Mesa Urgent Care',
+    csm: 'Jordan Lee',
+    mrr: 14200,
+    health: 'red',
+    wowDelta: -22,
+    renewalDays: 14,
+    nps: 22,
+    openTickets: 3,
+    signals: [
+      { source: 'looker',     text: 'Usage down 22% WoW' },
+      { source: 'salesforce', text: 'Renewal in 14 days' },
+      { source: 'gong',       text: 'No call in 18 days' },
+    ],
+  },
+  {
+    id: 'sonoran-health',
+    name: 'Sonoran Health',
+    csm: 'Taylor Kim',
+    mrr: 22800,
+    health: 'red',
+    wowDelta: -9,
+    renewalDays: 47,
+    nps: 18,
+    openTickets: 1,
+    signals: [
+      { source: 'looker',     text: 'Usage down 9% WoW' },
+      { source: 'salesforce', text: 'NPS dropped 18 pts to 18' },
+      { source: 'linear',     text: 'P2 support ticket open 9 days' },
+    ],
+  },
+  {
+    id: 'valley-medical',
+    name: 'Valley Medical Group',
+    csm: 'Jordan Lee',
+    mrr: 9600,
+    health: 'yellow',
+    wowDelta: -40,
+    renewalDays: 83,
+    nps: 41,
+    openTickets: 0,
+    signals: [
+      { source: 'looker', text: 'Usage down 40% WoW — champion OOO' },
+      { source: 'gong',   text: 'No call in 31 days' },
+      { source: 'slack',  text: 'No team channel activity this week' },
+    ],
+  },
+  {
+    id: 'ridgeline-ops',
+    name: 'Ridgeline Ops',
+    csm: 'Taylor Kim',
+    mrr: 7400,
+    health: 'yellow',
+    wowDelta: -11,
+    renewalDays: null,
+    nps: 47,
+    openTickets: 2,
+    signals: [
+      { source: 'looker',  text: 'Usage down 11% WoW — 3rd straight week' },
+      { source: 'linear',  text: '2 tickets unresolved >7 days' },
+    ],
+  },
+  {
+    id: 'summit-health',
+    name: 'Summit Health Clinics',
+    csm: 'Jordan Lee',
+    mrr: 18500,
+    health: 'green',
+    wowDelta: 8,
+    renewalDays: null,
+    nps: 74,
+    openTickets: 0,
+    signals: [
+      { source: 'looker',     text: 'Usage up 8% WoW' },
+      { source: 'salesforce', text: 'New 12-seat team onboarding' },
+      { source: 'gong',       text: 'Champion: "other teams are interested"' },
+    ],
+  },
+  {
+    id: 'beacon-analytics',
+    name: 'Beacon Analytics',
+    csm: 'Taylor Kim',
+    mrr: 11200,
+    health: 'green',
+    wowDelta: 14,
+    renewalDays: null,
+    nps: 81,
+    openTickets: 0,
+    signals: [
+      { source: 'looker', text: 'Usage up 14% WoW — new feature adoption' },
+      { source: 'gong',   text: 'Champion asked about API access' },
+    ],
+  },
+  {
+    id: 'northstar-fintech',
+    name: 'Northstar FinTech',
+    csm: 'Jordan Lee',
+    mrr: 31000,
+    health: 'green',
+    wowDelta: 3,
+    renewalDays: 112,
+    nps: 68,
+    openTickets: 1,
+    signals: [
+      { source: 'looker',     text: 'Usage stable +3% WoW' },
+      { source: 'salesforce', text: 'Renewal in 112 days — on track' },
+    ],
+  },
+  {
+    id: 'crestview-logistics',
+    name: 'Crestview Logistics',
+    csm: 'Taylor Kim',
+    mrr: 8900,
+    health: 'green',
+    wowDelta: 5,
+    renewalDays: null,
+    nps: 62,
+    openTickets: 0,
+    signals: [
+      { source: 'looker', text: 'Usage up 5% WoW' },
+      { source: 'slack',  text: 'Champion shared playbook in team channel' },
+    ],
+  },
+];
+
+var PRIORITY_ITEMS = [
+  {
+    id: 'p1', accountId: 'mesa-urgent-care', health: 'red',
+    action: 'Schedule renewal call — Mesa Urgent Care',
+    detail: 'Renewal in 14 days. Usage down 22% WoW. No Gong call in 18 days.',
+    sources: ['looker', 'salesforce', 'gong'],
+    checked: false,
+  },
+  {
+    id: 'p2', accountId: 'sonoran-health', health: 'red',
+    action: 'Flag churn risk — Sonoran Health',
+    detail: 'NPS fell 18 pts to 18. Open support ticket. Book EBR before renewal in 47 days.',
+    sources: ['salesforce', 'linear'],
+    checked: false,
+  },
+  {
+    id: 'p3', accountId: 'valley-medical', health: 'yellow',
+    action: 'Check in on Valley Medical Group',
+    detail: 'Champion OOO, usage down 40% this week. No Slack activity, no calls in 31 days.',
+    sources: ['looker', 'gong', 'slack'],
+    checked: false,
+  },
+  {
+    id: 'p4', accountId: 'ridgeline-ops', health: 'yellow',
+    action: 'Resolve stalled tickets — Ridgeline Ops',
+    detail: '3 consecutive weeks of declining usage. Two P2 tickets open for over 7 days.',
+    sources: ['looker', 'linear'],
+    checked: false,
+  },
+  {
+    id: 'p5', accountId: 'summit-health', health: 'green',
+    action: 'Pitch expansion — Summit Health Clinics',
+    detail: 'New 12-seat team onboarding. Usage +8% WoW, NPS 74. Champion flagged other departments.',
+    sources: ['looker', 'salesforce', 'gong'],
+    checked: false,
+  },
+  {
+    id: 'p6', accountId: 'beacon-analytics', health: 'green',
+    action: 'Send API documentation — Beacon Analytics',
+    detail: 'Champion asked about API access on last call. Usage up 14% WoW.',
+    sources: ['looker', 'gong'],
+    checked: false,
+  },
+];
+
+// ── STATE ───────────────────────────────────────────────────────────────────
+
+var draftManuallyEdited = false;
+var warningDismissed = false;
+
+// ── UTILITIES ────────────────────────────────────────────────────────────────
+
+function fmt(n) {
+  if (n >= 1000000) return '$' + (n / 1000000).toFixed(1) + 'M';
+  if (n >= 1000)    return '$' + (n / 1000).toFixed(0) + 'K';
+  return '$' + n;
+}
+
+function fmtFull(n) {
+  return '$' + Math.round(n).toLocaleString();
+}
+
+function fmtDelta(n) {
+  if (n > 0) return '+' + n + '%';
+  if (n < 0) return n + '%';
+  return '0%';
+}
+
+function isConnected(key) {
+  return INTEGRATIONS[key].connected;
+}
+
+function allSourcesOff(sources) {
+  return sources.every(function(s) { return !isConnected(s); });
+}
+
+// ── PURE COMPUTATIONS ────────────────────────────────────────────────────────
+
+function computeSummaryStats() {
+  var mrrAtRisk = 0;
+  var renewalMrr = 0;
+  var expansionCount = 0;
+  var openTickets = 0;
+
+  ACCOUNTS.forEach(function(a) {
+    if (a.health === 'red') mrrAtRisk += a.mrr;
+    if (a.renewalDays !== null && a.renewalDays <= 30 && isConnected('salesforce')) renewalMrr += a.mrr;
+    if (a.health === 'green' && a.wowDelta > 0 && isConnected('looker')) expansionCount++;
+    if (isConnected('linear')) openTickets += a.openTickets;
+  });
+
+  return { mrrAtRisk: mrrAtRisk, renewalMrr: renewalMrr, expansionCount: expansionCount, openTickets: openTickets };
+}
+
+function generateDraftText() {
+  var today = new Date();
+  var dateStr = today.toLocaleDateString('en-US', { weekday: 'long', month: 'short', day: 'numeric', year: 'numeric' });
+
+  var urgent = PRIORITY_ITEMS.filter(function(i) { return !i.checked && i.health === 'red'; });
+  var watch  = PRIORITY_ITEMS.filter(function(i) { return !i.checked && i.health === 'yellow'; });
+  var wins   = PRIORITY_ITEMS.filter(function(i) { return !i.checked && i.health === 'green'; });
+  var allDone = PRIORITY_ITEMS.every(function(i) { return i.checked; });
+
+  if (allDone) {
+    return ':white_check_mark: *Monday Morning CS Briefing \u2014 ' + dateStr + '*\n\nTeam is fully caught up \u2014 no urgent items this week. Great work.\n\n_Generated by Monday Morning Playbook_';
+  }
+
+  var lines = [':wave: *Monday Morning CS Briefing \u2014 ' + dateStr + '*'];
+
+  if (urgent.length) {
+    lines.push('');
+    lines.push(':red_circle: *Urgent (' + urgent.length + ')*');
+    urgent.forEach(function(i) { lines.push('\u2022 ' + i.action); });
+  }
+
+  if (watch.length) {
+    lines.push('');
+    lines.push(':yellow_circle: *Watch (' + watch.length + ')*');
+    watch.forEach(function(i) { lines.push('\u2022 ' + i.action); });
+  }
+
+  if (wins.length) {
+    lines.push('');
+    lines.push(':large_green_circle: *Wins & Expansion*');
+    wins.forEach(function(i) { lines.push('\u2022 ' + i.action); });
+  }
+
+  lines.push('');
+  lines.push('_Generated by Monday Morning Playbook_');
+  return lines.join('\n');
+}
+
+// ── RENDER FUNCTIONS ─────────────────────────────────────────────────────────
+
+function renderIntegrationSidebar() {
+  var togglesEl = document.getElementById('integration-toggles');
+  var statusEl  = document.getElementById('integration-status');
+  var stripEl   = document.getElementById('integration-strip');
+
+  // Desktop toggles
+  var togglesHtml = '';
+  Object.keys(INTEGRATIONS).forEach(function(key) {
+    var intg = INTEGRATIONS[key];
+    var checked = intg.connected ? 'checked' : '';
+    togglesHtml += '<div class="integration-toggle-row">' +
+      '<div class="integration-info">' +
+        '<div class="integration-icon">' + intg.abbr + '</div>' +
+        '<span class="integration-label">' + intg.label + '</span>' +
+      '</div>' +
+      '<label class="toggle-switch">' +
+        '<input type="checkbox" ' + checked + ' data-key="' + key + '" onchange="toggleIntegration(\'' + key + '\')">' +
+        '<div class="toggle-track"><div class="toggle-thumb"></div></div>' +
+      '</label>' +
+    '</div>';
+  });
+  togglesEl.innerHTML = togglesHtml;
+
+  // Desktop status
+  var statusHtml = '';
+  Object.keys(INTEGRATIONS).forEach(function(key) {
+    var intg = INTEGRATIONS[key];
+    var dotClass = intg.connected ? 'status-dot--on' : 'status-dot--off';
+    var badgeClass = intg.connected ? 'status-badge--on' : 'status-badge--off';
+    var badgeText = intg.connected ? 'Connected' : 'Off';
+    statusHtml += '<div class="integration-status-row">' +
+      '<div class="status-dot ' + dotClass + '"></div>' +
+      '<span class="status-name">' + intg.label + '</span>' +
+      '<span class="status-badge ' + badgeClass + '">' + badgeText + '</span>' +
+    '</div>';
+  });
+  statusEl.innerHTML = statusHtml;
+
+  // Mobile strip
+  var stripHtml = '';
+  Object.keys(INTEGRATIONS).forEach(function(key) {
+    var intg = INTEGRATIONS[key];
+    var onClass = intg.connected ? 'on' : 'off';
+    var dotColor = intg.connected ? 'var(--mint)' : 'var(--coral)';
+    stripHtml += '<div class="strip-chip ' + onClass + '" onclick="toggleIntegration(\'' + key + '\')">' +
+      '<span style="width:6px;height:6px;border-radius:50%;background:' + dotColor + ';display:inline-block;"></span>' +
+      intg.label +
+    '</div>';
+  });
+  stripEl.innerHTML = stripHtml;
+}
+
+function renderSummaryStats() {
+  var stats = computeSummaryStats();
+  var el = document.getElementById('stats-bar');
+
+  var salesforceOff = !isConnected('salesforce');
+  var lookerOff     = !isConnected('looker');
+  var linearOff     = !isConnected('linear');
+
+  el.innerHTML =
+    '<div class="stat-tile">' +
+      '<div class="stat-tile-label">MRR at Risk</div>' +
+      '<div class="stat-tile-value stat-tile-value--risk">' + fmt(stats.mrrAtRisk) + '</div>' +
+      '<div class="stat-tile-sub">2 accounts</div>' +
+    '</div>' +
+
+    '<div class="stat-tile">' +
+      '<div class="stat-tile-label">Renewal in 30 Days</div>' +
+      (salesforceOff
+        ? '<div class="stat-tile-value stat-tile-value--muted">—</div><div class="stat-tile-sub stat-tile-sub--disconnected">Salesforce disconnected</div>'
+        : '<div class="stat-tile-value stat-tile-value--warn">' + fmt(stats.renewalMrr) + '</div><div class="stat-tile-sub">1 account</div>'
+      ) +
+    '</div>' +
+
+    '<div class="stat-tile">' +
+      '<div class="stat-tile-label">Expansion Signals</div>' +
+      (lookerOff
+        ? '<div class="stat-tile-value stat-tile-value--muted">—</div><div class="stat-tile-sub stat-tile-sub--disconnected">Looker disconnected</div>'
+        : '<div class="stat-tile-value stat-tile-value--good">' + stats.expansionCount + '</div><div class="stat-tile-sub">accounts trending up</div>'
+      ) +
+    '</div>' +
+
+    '<div class="stat-tile">' +
+      '<div class="stat-tile-label">Open Tickets</div>' +
+      (linearOff
+        ? '<div class="stat-tile-value stat-tile-value--muted">—</div><div class="stat-tile-sub stat-tile-sub--disconnected">Linear disconnected</div>'
+        : '<div class="stat-tile-value">' + stats.openTickets + '</div><div class="stat-tile-sub">across all accounts</div>'
+      ) +
+    '</div>';
+}
+
+function renderPriorityQueue() {
+  var bodyEl  = document.getElementById('priority-queue-body');
+  var badgeEl = document.getElementById('queue-badge');
+  var open = PRIORITY_ITEMS.filter(function(i) { return !i.checked; }).length;
+  badgeEl.textContent = open;
+
+  var allDone = open === 0;
+
+  if (allDone) {
+    bodyEl.innerHTML =
+      '<div class="queue-empty-state">' +
+        '<div class="queue-empty-icon">&#10003;</div>' +
+        '<div class="queue-empty-title">All caught up</div>' +
+        '<div class="queue-empty-sub">Your team is on top of it. Check back next Monday.</div>' +
+      '</div>';
+    return;
+  }
+
+  var html = '';
+  PRIORITY_ITEMS.forEach(function(item) {
+    var unavailable = allSourcesOff(item.sources);
+    var checkedClass = item.checked ? 'queue-item--checked' : '';
+    var unavailClass = (!item.checked && unavailable) ? 'queue-item--unavailable' : '';
+    var doneClass = item.checked ? 'queue-check--done' : '';
+
+    var sourcesHtml = item.sources.map(function(s) {
+      var offClass = !isConnected(s) ? 'source-badge--off' : '';
+      return '<span class="source-badge ' + offClass + '">' + INTEGRATIONS[s].label + '</span>';
+    }).join('');
+
+    html +=
+      '<div class="queue-item ' + checkedClass + ' ' + unavailClass + '" id="qi-' + item.id + '">' +
+        '<button class="queue-check ' + doneClass + '" onclick="toggleItem(\'' + item.id + '\')" aria-label="Mark complete" aria-pressed="' + item.checked + '">' +
+          '<svg width="10" height="8" viewBox="0 0 10 8" fill="none" xmlns="http://www.w3.org/2000/svg">' +
+            '<path d="M1 4L3.5 6.5L9 1" stroke="' + (item.checked ? 'var(--mint)' : 'none') + '" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>' +
+          '</svg>' +
+        '</button>' +
+        '<div class="queue-item-body">' +
+          '<div class="queue-top">' +
+            '<div class="health-dot ' + item.health + '"></div>' +
+            '<span class="queue-action">' + item.action + '</span>' +
+          '</div>' +
+          '<div class="queue-detail">' + item.detail + '</div>' +
+          '<div class="queue-sources">' + sourcesHtml + '</div>' +
+          (unavailable && !item.checked ? '<div class="queue-unavailable-label">Data unavailable — reconnect integrations to restore</div>' : '') +
+        '</div>' +
+      '</div>';
+  });
+
+  bodyEl.innerHTML = html;
+}
+
+function renderAccountHealthPanel() {
+  var tbody = document.getElementById('health-table-body');
+
+  var html = '';
+  ACCOUNTS.forEach(function(a) {
+    var deltaClass = a.wowDelta > 0 ? 'usage-delta--up' : (a.wowDelta < 0 ? 'usage-delta--down' : 'usage-delta--flat');
+    var deltaText  = isConnected('looker')
+      ? '<span class="usage-delta ' + deltaClass + '">' + fmtDelta(a.wowDelta) + '</span>'
+      : '<span class="usage-delta usage-delta--na">—</span>';
+
+    var renewalHtml;
+    if (!isConnected('salesforce')) {
+      renewalHtml = '<span class="cell-na">—</span>';
+    } else if (a.renewalDays === null) {
+      renewalHtml = '<span class="renewal-pill renewal-pill--na">—</span>';
+    } else if (a.renewalDays <= 30) {
+      renewalHtml = '<span class="renewal-pill renewal-pill--urgent">' + a.renewalDays + 'd</span>';
+    } else if (a.renewalDays <= 90) {
+      renewalHtml = '<span class="renewal-pill renewal-pill--soon">' + a.renewalDays + 'd</span>';
+    } else {
+      renewalHtml = '<span class="renewal-pill renewal-pill--ok">' + a.renewalDays + 'd</span>';
+    }
+
+    var signalsHtml = a.signals.map(function(sig) {
+      var disconnectedClass = !isConnected(sig.source) ? 'source-disconnected' : '';
+      return '<div class="' + disconnectedClass + '" data-source="' + sig.source + '" style="font-size:11px;color:var(--ink-40);line-height:1.5;">' + sig.text + '</div>';
+    }).join('');
+
+    html +=
+      '<tr>' +
+        '<td>' +
+          '<div class="acct-name">' + a.name + '</div>' +
+          '<div class="acct-csm">' + a.csm + '</div>' +
+        '</td>' +
+        '<td><span class="health-badge ' + a.health + '">' + (a.health === 'red' ? 'At Risk' : a.health === 'yellow' ? 'Watch' : 'Healthy') + '</span></td>' +
+        '<td style="color:var(--ink-10);font-weight:600;">' + fmtFull(a.mrr) + '</td>' +
+        '<td>' + deltaText + '</td>' +
+        '<td>' + renewalHtml + '</td>' +
+        '<td>' + signalsHtml + '</td>' +
+      '</tr>';
+  });
+
+  tbody.innerHTML = html;
+}
+
+function renderSlackDraft() {
+  if (draftManuallyEdited) return;
+  var textarea = document.getElementById('slack-draft-textarea');
+  textarea.value = generateDraftText();
+
+  // Slack overlay
+  var overlay = document.getElementById('slack-overlay');
+  overlay.style.display = isConnected('slack') ? 'none' : 'flex';
+}
+
+function renderWarningBanner() {
+  if (warningDismissed) return;
+  var banner = document.getElementById('warning-banner');
+  var textEl = document.getElementById('warning-text');
+
+  var disconnected = Object.keys(INTEGRATIONS).filter(function(k) { return !INTEGRATIONS[k].connected; });
+
+  if (disconnected.length === 0) {
+    banner.classList.add('warning-banner--hidden');
+    return;
+  }
+
+  banner.classList.remove('warning-banner--hidden');
+  var names = disconnected.map(function(k) { return INTEGRATIONS[k].label; });
+  textEl.textContent = names.join(', ') + (disconnected.length === 1 ? ' is' : ' are') + ' disconnected — some signals and stats may be missing.';
+}
+
+function renderAll() {
+  renderIntegrationSidebar();
+  renderSummaryStats();
+  renderPriorityQueue();
+  renderAccountHealthPanel();
+  renderSlackDraft();
+  renderWarningBanner();
+}
+
+// ── STATE MUTATIONS ──────────────────────────────────────────────────────────
+
+function toggleIntegration(key) {
+  INTEGRATIONS[key].connected = !INTEGRATIONS[key].connected;
+  warningDismissed = false;
+  renderAll();
+}
+
+function toggleItem(itemId) {
+  var item = PRIORITY_ITEMS.find(function(i) { return i.id === itemId; });
+  if (!item) return;
+  item.checked = !item.checked;
+  renderPriorityQueue();
+  renderSlackDraft();
+}
+
+function dismissWarning() {
+  warningDismissed = true;
+  document.getElementById('warning-banner').classList.add('warning-banner--hidden');
+}
+
+// ── SLACK DRAFT ACTIONS ──────────────────────────────────────────────────────
+
+function copyToClipboard() {
+  var textarea = document.getElementById('slack-draft-textarea');
+  var text = textarea.value;
+  var btn = document.getElementById('btn-copy');
+
+  function showSuccess() {
+    btn.textContent = 'Copied!';
+    btn.classList.add('btn-copy--success');
+    setTimeout(function() {
+      btn.textContent = 'Copy to Clipboard';
+      btn.classList.remove('btn-copy--success');
+    }, 1800);
+  }
+
+  if (navigator.clipboard && navigator.clipboard.writeText) {
+    navigator.clipboard.writeText(text).then(showSuccess).catch(function() {
+      fallbackCopy(text, showSuccess);
+    });
+  } else {
+    fallbackCopy(text, showSuccess);
+  }
+}
+
+function fallbackCopy(text, cb) {
+  var tmp = document.createElement('textarea');
+  tmp.value = text;
+  tmp.style.position = 'fixed';
+  tmp.style.opacity = '0';
+  document.body.appendChild(tmp);
+  tmp.select();
+  try { document.execCommand('copy'); cb(); } catch(e) {}
+  document.body.removeChild(tmp);
+}
+
+function resetDraft() {
+  draftManuallyEdited = false;
+  document.getElementById('btn-reset').style.display = 'none';
+  document.getElementById('draft-edited-badge').style.display = 'none';
+  renderSlackDraft();
+}
+
+// ── INIT ─────────────────────────────────────────────────────────────────────
+
+function init() {
+  renderAll();
+
+  // Watch for manual textarea edits
+  var textarea = document.getElementById('slack-draft-textarea');
+  textarea.addEventListener('input', function() {
+    if (!draftManuallyEdited) {
+      draftManuallyEdited = true;
+      document.getElementById('btn-reset').style.display = 'inline-flex';
+      document.getElementById('draft-edited-badge').style.display = 'inline-flex';
+    }
+  });
+}
+
+document.addEventListener('DOMContentLoaded', init);
+</script>
+
+</body>
+</html>
