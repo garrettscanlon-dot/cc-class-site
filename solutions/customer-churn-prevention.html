@@ -1,0 +1,951 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Customer Churn Prevention | Monday Morning Playbook</title>
+  <meta name="description" content="Prevent customer churn before it happens. Monday Morning Playbook gives CS teams a weekly briefing with at-risk accounts, health signals, and prioritized actions — live in 5 minutes." />
+  <link rel="canonical" href="https://mondaymorningplaybook.com/solutions/customer-churn-prevention.html" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@0,400;0,500;0,700&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --ink:         #0a0a0f;
+      --ink-90:      #16161f;
+      --ink-80:      #1e1e2a;
+      --ink-70:      #2a2a3a;
+      --ink-60:      #3a3a4e;
+      --ink-40:      #6b6b82;
+      --ink-30:      #8e8ea3;
+      --ink-20:      #b0b0c0;
+      --ink-10:      #d4d4de;
+      --white:       #f5f5f7;
+      --accent:      #6366f1;
+      --accent-dim:  #4f46e5;
+      --accent-glow: rgba(99,102,241,.15);
+      --accent-glow2:rgba(99,102,241,.08);
+      --mint:        #34d399;
+      --mint-dim:    rgba(52,211,153,.12);
+      --coral:       #f87171;
+      --coral-dim:   rgba(248,113,113,.12);
+      --amber:       #fbbf24;
+      --amber-dim:   rgba(251,191,36,.12);
+      --radius:      10px;
+      --radius-lg:   16px;
+      --radius-xl:   24px;
+      --font-display:'Instrument Serif', Georgia, serif;
+      --font-body:   'DM Sans', -apple-system, sans-serif;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: var(--font-body);
+      background: var(--ink);
+      color: var(--ink-20);
+      font-size: 16px;
+      line-height: 1.65;
+      overflow-x: hidden;
+    }
+
+    /* ── ANIMATIONS ── */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(30px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to   { opacity: 1; }
+    }
+    @keyframes pulse {
+      0%, 100% { opacity: .6; }
+      50% { opacity: 1; }
+    }
+    @keyframes float {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-6px); }
+    }
+
+    .anim-fade-up {
+      opacity: 0;
+      animation: fadeUp .7s ease-out forwards;
+    }
+    .anim-d1 { animation-delay: .1s; }
+    .anim-d2 { animation-delay: .2s; }
+    .anim-d3 { animation-delay: .3s; }
+    .anim-d4 { animation-delay: .4s; }
+    .anim-d5 { animation-delay: .5s; }
+
+    /* ── NAV ── */
+    nav {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: rgba(10,10,15,.85);
+      backdrop-filter: blur(20px) saturate(180%);
+      -webkit-backdrop-filter: blur(20px) saturate(180%);
+      border-bottom: 1px solid rgba(255,255,255,.06);
+      padding: 0 32px;
+      height: 64px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .nav-left { display: flex; align-items: center; gap: 40px; }
+
+    .logo {
+      font-family: var(--font-display);
+      font-size: 22px;
+      color: var(--white);
+      text-decoration: none;
+      letter-spacing: -.3px;
+    }
+
+    .nav-links { display: flex; gap: 28px; list-style: none; }
+    .nav-links a {
+      font-size: 14px;
+      color: var(--ink-30);
+      text-decoration: none;
+      font-weight: 500;
+      transition: color .2s;
+    }
+    .nav-links a:hover { color: var(--white); }
+
+    .nav-right { display: flex; align-items: center; gap: 12px; }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-family: var(--font-body);
+      font-size: 14px;
+      font-weight: 600;
+      padding: 9px 22px;
+      border-radius: 8px;
+      border: 1px solid transparent;
+      cursor: pointer;
+      text-decoration: none;
+      transition: all .2s ease;
+    }
+
+    .btn-primary {
+      background: var(--accent);
+      color: var(--white);
+      border-color: var(--accent);
+      box-shadow: 0 0 20px var(--accent-glow), 0 2px 8px rgba(0,0,0,.3);
+    }
+    .btn-primary:hover {
+      background: var(--accent-dim);
+      transform: translateY(-1px);
+      box-shadow: 0 0 30px var(--accent-glow), 0 4px 12px rgba(0,0,0,.4);
+    }
+
+    .btn-ghost {
+      background: transparent;
+      color: var(--ink-20);
+      border-color: var(--ink-60);
+    }
+    .btn-ghost:hover {
+      color: var(--white);
+      border-color: var(--ink-30);
+      background: rgba(255,255,255,.04);
+    }
+
+    .btn-large {
+      padding: 14px 32px;
+      font-size: 16px;
+      border-radius: 10px;
+    }
+
+    /* ── LAYOUT ── */
+    .container {
+      max-width: 1140px;
+      margin: 0 auto;
+      padding: 0 32px;
+    }
+
+    section {
+      padding: 100px 0;
+      position: relative;
+    }
+
+    .section-label {
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      color: var(--accent);
+      font-weight: 700;
+      margin-bottom: 16px;
+    }
+
+    .section-title {
+      font-family: var(--font-display);
+      font-size: 42px;
+      font-weight: 400;
+      color: var(--white);
+      line-height: 1.15;
+      margin-bottom: 16px;
+      letter-spacing: -.3px;
+    }
+
+    .section-subtitle {
+      font-size: 17px;
+      color: var(--ink-30);
+      max-width: 540px;
+      line-height: 1.7;
+    }
+
+    .section-header {
+      text-align: center;
+      margin-bottom: 60px;
+    }
+
+    .section-header .section-subtitle {
+      margin: 0 auto;
+    }
+
+    .section-divider {
+      border: none;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, var(--ink-60), transparent);
+      margin: 0;
+    }
+
+    /* ── HERO ── */
+    .hero-wrap {
+      position: relative;
+      overflow: hidden;
+      padding: 100px 0 60px;
+    }
+
+    .hero-wrap::before {
+      content: '';
+      position: absolute;
+      top: -200px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 900px;
+      height: 900px;
+      background: radial-gradient(circle, var(--accent-glow) 0%, transparent 70%);
+      pointer-events: none;
+    }
+
+    .hero-wrap::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      right: -100px;
+      width: 500px;
+      height: 500px;
+      background: radial-gradient(circle, rgba(248,113,113,.06) 0%, transparent 70%);
+      pointer-events: none;
+    }
+
+    .hero {
+      max-width: 1140px;
+      margin: 0 auto;
+      padding: 0 32px;
+      text-align: center;
+      position: relative;
+      z-index: 1;
+    }
+
+    .hero-eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: var(--accent-glow2);
+      border: 1px solid rgba(99,102,241,.2);
+      border-radius: 100px;
+      padding: 6px 16px;
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--accent);
+      margin-bottom: 32px;
+    }
+
+    .hero-eyebrow .dot {
+      width: 6px; height: 6px;
+      border-radius: 50%;
+      background: var(--accent);
+      animation: pulse 2s ease-in-out infinite;
+    }
+
+    .hero-title {
+      font-family: var(--font-display);
+      font-size: 64px;
+      font-weight: 400;
+      color: var(--white);
+      line-height: 1.05;
+      margin-bottom: 24px;
+      letter-spacing: -.5px;
+    }
+
+    .hero-title em {
+      font-style: italic;
+      color: var(--accent);
+    }
+
+    .hero-sub {
+      font-size: 19px;
+      color: var(--ink-30);
+      max-width: 560px;
+      margin: 0 auto 40px;
+      line-height: 1.6;
+    }
+
+    .hero-buttons {
+      display: flex;
+      gap: 14px;
+      justify-content: center;
+      margin-bottom: 72px;
+    }
+
+    .hero-image {
+      max-width: 880px;
+      margin: 0 auto;
+      border-radius: var(--radius-xl);
+      overflow: hidden;
+      box-shadow: 0 40px 80px rgba(0,0,0,.5), 0 0 60px var(--accent-glow2);
+      border: 1px solid var(--ink-70);
+      animation: float 6s ease-in-out infinite;
+    }
+
+    .hero-image img {
+      width: 100%;
+      height: auto;
+      display: block;
+    }
+
+    /* ── PAIN POINTS ── */
+    .pain-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 20px;
+    }
+
+    .pain-card {
+      background: var(--ink-90);
+      border: 1px solid var(--ink-70);
+      border-radius: var(--radius-lg);
+      padding: 36px 28px;
+      transition: border-color .2s, transform .2s;
+    }
+
+    .pain-card:hover {
+      border-color: var(--ink-60);
+      transform: translateY(-2px);
+    }
+
+    .pain-icon {
+      width: 48px;
+      height: 48px;
+      border-radius: var(--radius);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 22px;
+      margin-bottom: 20px;
+    }
+
+    .pain-icon.coral { background: var(--coral-dim); }
+    .pain-icon.amber { background: var(--amber-dim); }
+    .pain-icon.accent { background: var(--accent-glow); }
+
+    .pain-card h3 {
+      font-family: var(--font-display);
+      font-size: 22px;
+      font-weight: 400;
+      color: var(--white);
+      margin-bottom: 10px;
+      line-height: 1.3;
+    }
+
+    .pain-card p {
+      font-size: 15px;
+      color: var(--ink-30);
+      line-height: 1.65;
+    }
+
+    /* ── HOW IT WORKS (STEPS) ── */
+    .steps {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 32px;
+      position: relative;
+    }
+
+    .steps::before {
+      content: '';
+      position: absolute;
+      top: 36px;
+      left: 16.67%;
+      right: 16.67%;
+      height: 2px;
+      background: linear-gradient(90deg, var(--accent-glow), var(--accent), var(--accent-glow));
+      opacity: .3;
+    }
+
+    .step {
+      text-align: center;
+      position: relative;
+    }
+
+    .step-number {
+      width: 72px;
+      height: 72px;
+      border-radius: 50%;
+      background: var(--ink-90);
+      border: 2px solid var(--accent);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 24px;
+      font-family: var(--font-display);
+      font-size: 28px;
+      color: var(--accent);
+      box-shadow: 0 0 24px var(--accent-glow);
+      position: relative;
+      z-index: 1;
+    }
+
+    .step h3 {
+      font-family: var(--font-display);
+      font-size: 22px;
+      font-weight: 400;
+      color: var(--white);
+      margin-bottom: 10px;
+    }
+
+    .step p {
+      font-size: 15px;
+      color: var(--ink-30);
+      max-width: 280px;
+      margin: 0 auto;
+      line-height: 1.65;
+    }
+
+    /* ── FEATURE SPOTLIGHT ── */
+    .spotlight-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 60px;
+      align-items: center;
+    }
+
+    .spotlight-text .section-label { margin-bottom: 12px; }
+
+    .spotlight-text .section-title {
+      font-size: 38px;
+      margin-bottom: 20px;
+    }
+
+    .spotlight-text p {
+      font-size: 16px;
+      color: var(--ink-20);
+      line-height: 1.7;
+      margin-bottom: 16px;
+    }
+
+    .spotlight-list {
+      list-style: none;
+      margin-top: 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    .spotlight-list li {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      font-size: 15px;
+      color: var(--ink-20);
+      line-height: 1.5;
+    }
+
+    .spotlight-list .check {
+      flex-shrink: 0;
+      width: 22px;
+      height: 22px;
+      border-radius: 50%;
+      background: var(--mint-dim);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 12px;
+      color: var(--mint);
+      margin-top: 2px;
+    }
+
+    .spotlight-visual {
+      background: var(--ink-90);
+      border: 1px solid var(--ink-70);
+      border-radius: var(--radius-xl);
+      padding: 28px;
+      box-shadow: 0 20px 60px rgba(0,0,0,.3), 0 0 40px var(--accent-glow2);
+    }
+
+    .health-mockup-header {
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--white);
+      margin-bottom: 20px;
+      padding-bottom: 14px;
+      border-bottom: 1px solid var(--ink-70);
+    }
+
+    .health-row {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      padding: 14px 0;
+      border-bottom: 1px solid var(--ink-80);
+    }
+
+    .health-row:last-child { border-bottom: none; }
+
+    .health-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      flex-shrink: 0;
+    }
+
+    .health-dot.red { background: var(--coral); box-shadow: 0 0 8px var(--coral-dim); }
+    .health-dot.yellow { background: var(--amber); box-shadow: 0 0 8px var(--amber-dim); }
+    .health-dot.green { background: var(--mint); box-shadow: 0 0 8px var(--mint-dim); }
+
+    .health-account {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--white);
+      flex: 1;
+    }
+
+    .health-score {
+      font-size: 13px;
+      font-weight: 700;
+      padding: 4px 10px;
+      border-radius: 6px;
+    }
+
+    .health-score.red { background: var(--coral-dim); color: var(--coral); }
+    .health-score.yellow { background: var(--amber-dim); color: var(--amber); }
+    .health-score.green { background: var(--mint-dim); color: var(--mint); }
+
+    .health-reason {
+      font-size: 12px;
+      color: var(--ink-40);
+      flex-shrink: 0;
+      max-width: 180px;
+      text-align: right;
+    }
+
+    /* ── SOCIAL PROOF ── */
+    .proof-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 40px;
+      align-items: center;
+    }
+
+    .proof-stat {
+      background: var(--ink-90);
+      border: 1px solid var(--ink-70);
+      border-radius: var(--radius-xl);
+      padding: 48px;
+      text-align: center;
+    }
+
+    .proof-stat-value {
+      font-family: var(--font-display);
+      font-size: 64px;
+      color: var(--mint);
+      line-height: 1;
+      margin-bottom: 12px;
+      text-shadow: 0 0 40px rgba(52,211,153,.2);
+    }
+
+    .proof-stat-label {
+      font-size: 17px;
+      color: var(--ink-20);
+      line-height: 1.5;
+    }
+
+    .proof-quote {
+      background: var(--ink-90);
+      border: 1px solid var(--ink-70);
+      border-radius: var(--radius-xl);
+      padding: 48px;
+    }
+
+    .proof-quote blockquote {
+      font-size: 17px;
+      color: var(--ink-10);
+      line-height: 1.7;
+      font-style: italic;
+      margin-bottom: 24px;
+      position: relative;
+      padding-left: 24px;
+      border-left: 3px solid var(--accent);
+    }
+
+    .proof-quote-author {
+      font-size: 15px;
+      font-weight: 700;
+      color: var(--white);
+    }
+
+    .proof-quote-role {
+      font-size: 13px;
+      color: var(--ink-40);
+      margin-top: 2px;
+    }
+
+    /* ── CTA ── */
+    .cta-section {
+      text-align: center;
+      position: relative;
+      padding: 100px 0;
+      overflow: hidden;
+    }
+
+    .cta-section::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(ellipse at center, var(--accent-glow) 0%, transparent 60%);
+      pointer-events: none;
+    }
+
+    .cta-title {
+      font-family: var(--font-display);
+      font-size: 48px;
+      color: var(--white);
+      margin-bottom: 16px;
+      position: relative;
+    }
+
+    .cta-sub {
+      font-size: 18px;
+      color: var(--ink-30);
+      max-width: 460px;
+      margin: 0 auto 36px;
+      position: relative;
+    }
+
+    .cta-buttons {
+      display: flex;
+      gap: 14px;
+      justify-content: center;
+      position: relative;
+    }
+
+    /* ── FOOTER ── */
+    footer {
+      border-top: 1px solid var(--ink-70);
+      padding: 48px 32px;
+    }
+
+    .footer-inner {
+      max-width: 1140px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .footer-brand {
+      font-family: var(--font-display);
+      font-size: 18px;
+      color: var(--ink-20);
+    }
+
+    .footer-links {
+      display: flex;
+      gap: 24px;
+      list-style: none;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+
+    .footer-links a {
+      font-size: 13px;
+      color: var(--ink-40);
+      text-decoration: none;
+      transition: color .2s;
+    }
+    .footer-links a:hover { color: var(--white); }
+
+    .footer-copy {
+      font-size: 13px;
+      color: var(--ink-60);
+    }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 768px) {
+      .hero-title { font-size: 38px; }
+      .hero-sub { font-size: 17px; }
+      .hero-buttons { flex-direction: column; align-items: center; }
+      .pain-grid { grid-template-columns: 1fr; }
+      .steps { grid-template-columns: 1fr; }
+      .steps::before { display: none; }
+      .spotlight-grid { grid-template-columns: 1fr; }
+      .proof-grid { grid-template-columns: 1fr; }
+      .nav-links { display: none; }
+      .footer-inner { flex-direction: column; gap: 20px; text-align: center; }
+      .footer-links { justify-content: center; }
+      .cta-buttons { flex-direction: column; align-items: center; }
+      .section-title { font-size: 30px; }
+      .cta-title { font-size: 32px; }
+      nav { padding: 0 20px; }
+      .container { padding: 0 20px; }
+      .hero { padding: 0 20px; }
+      section { padding: 72px 0; }
+      .spotlight-text .section-title { font-size: 28px; }
+      .proof-stat-value { font-size: 48px; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-left">
+    <a href="/index.html" class="logo">Monday Morning Playbook</a>
+    <ul class="nav-links">
+      <li><a href="/index.html#features">Features</a></li>
+      <li><a href="/index.html#roi">ROI Calculator</a></li>
+      <li><a href="/blog/customer-churn-prevention-guide.html">Blog</a></li>
+    </ul>
+  </div>
+  <div class="nav-right">
+    <a href="/demo.html" class="btn btn-ghost">See a Demo</a>
+    <a href="/index.html#cta" class="btn btn-primary">Start Free Trial</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<div class="hero-wrap">
+  <div class="hero">
+    <div class="hero-eyebrow anim-fade-up anim-d1">
+      <span class="dot"></span>
+      Churn Prevention
+    </div>
+    <h1 class="hero-title anim-fade-up anim-d2">Customer Churn Prevention<br>Starts on <em>Monday Morning</em></h1>
+    <p class="hero-sub anim-fade-up anim-d3">Catch at-risk accounts before they leave. Get a weekly briefing with health signals, churn risk scores, and prioritized actions for every account — live in 5 minutes, not 5 months.</p>
+    <div class="hero-buttons anim-fade-up anim-d4">
+      <a href="/index.html#cta" class="btn btn-primary btn-large">Start Free Trial</a>
+      <a href="/demo.html" class="btn btn-ghost btn-large">See a Demo</a>
+    </div>
+    <div class="hero-image anim-fade-up anim-d5">
+      <img src="../images/hero-churn-prevention.png" alt="Monday Morning Playbook churn prevention dashboard showing at-risk accounts with health scores and prioritized actions" />
+    </div>
+  </div>
+</div>
+
+<hr class="section-divider" />
+
+<!-- PAIN POINTS -->
+<section>
+  <div class="container">
+    <div class="section-header">
+      <div class="section-label">The Problem</div>
+      <h2 class="section-title">Churn doesn't happen overnight.<br>It happens while you're not looking.</h2>
+      <p class="section-subtitle">Most CS teams don't have a churn problem — they have a visibility problem. By the time risk surfaces, it's too late to act.</p>
+    </div>
+    <div class="pain-grid">
+      <div class="pain-card anim-fade-up anim-d1">
+        <div class="pain-icon coral">
+          <svg width="22" height="22" fill="none" stroke="#f87171" stroke-width="2" viewBox="0 0 24 24"><path d="M4 4h16v16H4z"/><path d="M9 9h6M9 13h4"/></svg>
+        </div>
+        <h3>Churn signals buried in 5+ tools</h3>
+        <p>Usage data in one dashboard, support tickets in another, NPS in a spreadsheet. No single view of account health means at-risk accounts stay hidden until it's too late.</p>
+      </div>
+      <div class="pain-card anim-fade-up anim-d2">
+        <div class="pain-icon amber">
+          <svg width="22" height="22" fill="none" stroke="#fbbf24" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+        </div>
+        <h3>Risk caught too late to save the account</h3>
+        <p>Your CSM finds out an account is churning when the cancellation email arrives — not when usage dropped 40% three weeks ago. Reactive firefighting replaces proactive retention.</p>
+      </div>
+      <div class="pain-card anim-fade-up anim-d3">
+        <div class="pain-icon accent">
+          <svg width="22" height="22" fill="none" stroke="#6366f1" stroke-width="2" viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4-4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87"/><path d="M16 3.13a4 4 0 010 7.75"/></svg>
+        </div>
+        <h3>No consistent methodology across CSMs</h3>
+        <p>Every CSM assesses risk differently. One uses gut feel, another checks Salesforce, a third looks at support tickets. Without a shared framework, churn prevention is a coin flip.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<hr class="section-divider" />
+
+<!-- HOW MMP PREVENTS CHURN -->
+<section>
+  <div class="container">
+    <div class="section-header">
+      <div class="section-label">How It Works</div>
+      <h2 class="section-title">From scattered signals to<br><em>proactive churn prevention</em></h2>
+      <p class="section-subtitle">Three steps. Five minutes to set up. Your team gets a churn-prevention system that runs every Monday morning — automatically.</p>
+    </div>
+    <div class="steps">
+      <div class="step anim-fade-up anim-d1">
+        <div class="step-number">1</div>
+        <h3>Connect your integrations</h3>
+        <p>OAuth into Salesforce, Looker, Gong, Linear, and Slack. No data migration, no CSV uploads, no implementation project.</p>
+      </div>
+      <div class="step anim-fade-up anim-d2">
+        <div class="step-number">2</div>
+        <h3>Get weekly churn risk briefings</h3>
+        <p>Every Monday, your team gets a prioritized list of at-risk accounts with health scores, churn signals, and recommended next steps.</p>
+      </div>
+      <div class="step anim-fade-up anim-d3">
+        <div class="step-number">3</div>
+        <h3>Take action before it's too late</h3>
+        <p>CSMs know exactly which accounts need attention, why they're at risk, and what to do first. No more guessing, no more surprises at renewal.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<hr class="section-divider" />
+
+<!-- FEATURE SPOTLIGHT -->
+<section>
+  <div class="container">
+    <div class="spotlight-grid">
+      <div class="spotlight-text anim-fade-up">
+        <div class="section-label">Feature Spotlight</div>
+        <h2 class="section-title">Health scores that predict churn — not just report it</h2>
+        <p>Monday Morning Playbook combines usage data, support activity, NPS, engagement signals, and renewal timelines into a single health score for every account. Red, yellow, green — your team sees exactly where to focus.</p>
+        <p>The priority queue ranks at-risk accounts by urgency so CSMs stop wasting time on accounts that are fine and start saving the ones that aren't.</p>
+        <ul class="spotlight-list">
+          <li><span class="check">&#10003;</span> Multi-signal health scoring across all your tools</li>
+          <li><span class="check">&#10003;</span> Priority queue ranked by churn risk and revenue impact</li>
+          <li><span class="check">&#10003;</span> Automatic weekly delivery — no logins required</li>
+          <li><span class="check">&#10003;</span> Leading indicators, not lagging ones</li>
+        </ul>
+      </div>
+      <div class="spotlight-visual anim-fade-up anim-d2">
+        <div class="health-mockup-header">Account Health &amp; Churn Risk</div>
+        <div class="health-row">
+          <div class="health-dot red"></div>
+          <span class="health-account">Mesa Urgent Care</span>
+          <span class="health-reason">Usage -38%, renewal in 14d</span>
+          <span class="health-score red">Critical</span>
+        </div>
+        <div class="health-row">
+          <div class="health-dot red"></div>
+          <span class="health-account">Sonoran Health</span>
+          <span class="health-reason">NPS dropped 18 pts</span>
+          <span class="health-score red">At Risk</span>
+        </div>
+        <div class="health-row">
+          <div class="health-dot yellow"></div>
+          <span class="health-account">Valley Medical Group</span>
+          <span class="health-reason">Champion OOO, usage flat</span>
+          <span class="health-score yellow">Watch</span>
+        </div>
+        <div class="health-row">
+          <div class="health-dot green"></div>
+          <span class="health-account">Summit Health Clinics</span>
+          <span class="health-reason">Usage +12%, NPS 72</span>
+          <span class="health-score green">Healthy</span>
+        </div>
+        <div class="health-row">
+          <div class="health-dot green"></div>
+          <span class="health-account">Pacific Wellness</span>
+          <span class="health-reason">Expansion signal detected</span>
+          <span class="health-score green">Healthy</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<hr class="section-divider" />
+
+<!-- SOCIAL PROOF -->
+<section>
+  <div class="container">
+    <div class="section-header">
+      <div class="section-label">Results</div>
+      <h2 class="section-title">Customer churn prevention that<br>actually moves the number</h2>
+    </div>
+    <div class="proof-grid">
+      <div class="proof-stat anim-fade-up anim-d1">
+        <div class="proof-stat-value">80%</div>
+        <div class="proof-stat-label">of at-risk accounts caught and saved<br>before they churn</div>
+      </div>
+      <div class="proof-quote anim-fade-up anim-d2">
+        <blockquote>"We went from finding out about churn risk at renewal to catching it 6 weeks early. Monday Morning Playbook turned our team from reactive firefighters into proactive account managers."</blockquote>
+        <div class="proof-quote-author">Sarah Chen</div>
+        <div class="proof-quote-role">VP of Customer Success, CloudMetrics</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<hr class="section-divider" />
+
+<!-- CTA -->
+<section class="cta-section" id="cta">
+  <div class="container">
+    <h2 class="cta-title anim-fade-up">Stop losing customers<br>you could have saved.</h2>
+    <p class="cta-sub anim-fade-up anim-d1">Get your first churn prevention briefing this Monday. No implementation project. No configuration. Just connect your tools and go.</p>
+    <div class="cta-buttons anim-fade-up anim-d2">
+      <a href="/index.html#cta" class="btn btn-primary btn-large">Start Free Trial</a>
+      <a href="/demo.html" class="btn btn-ghost btn-large">See a Demo</a>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-inner">
+    <span class="footer-brand">Monday Morning Playbook</span>
+    <ul class="footer-links">
+      <li><a href="/index.html#how-it-works">How It Works</a></li>
+      <li><a href="/index.html#features">Features</a></li>
+      <li><a href="/solutions/customer-churn-prevention.html">Churn Prevention</a></li>
+      <li><a href="/blog/customer-churn-prevention-guide.html">Blog</a></li>
+      <li><a href="#">Privacy</a></li>
+      <li><a href="#">Terms</a></li>
+    </ul>
+    <span class="footer-copy">&copy; 2026 Monday Morning Playbook</span>
+  </div>
+</footer>
+
+<script>
+  // Scroll-triggered animations
+  (function() {
+    var observer = new IntersectionObserver(function(entries) {
+      entries.forEach(function(entry) {
+        if (entry.isIntersecting) {
+          entry.target.style.animationPlayState = 'running';
+          observer.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.1 });
+
+    document.querySelectorAll('.anim-fade-up').forEach(function(el) {
+      el.style.animationPlayState = 'paused';
+      observer.observe(el);
+    });
+
+    // Re-enable hero animations immediately
+    document.querySelectorAll('.hero .anim-fade-up, .hero-wrap .anim-fade-up').forEach(function(el) {
+      el.style.animationPlayState = 'running';
+    });
+  })();
+</script>
+
+</body>
+</html>

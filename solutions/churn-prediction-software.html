@@ -1,0 +1,970 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Customer Churn Prediction Software | Monday Morning Playbook</title>
+  <meta name="description" content="Predict which accounts will churn before they do. Monday Morning Playbook surfaces at-risk signals from Salesforce, Gong, and product usage data into a weekly prioritized briefing." />
+  <link rel="canonical" href="https://mondaymorningplaybook.com/solutions/churn-prediction-software" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@0,400;0,500;0,700&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --ink:         #0a0a0f;
+      --ink-90:      #16161f;
+      --ink-80:      #1e1e2a;
+      --ink-70:      #2a2a3a;
+      --ink-60:      #3a3a4e;
+      --ink-40:      #6b6b82;
+      --ink-30:      #8e8ea3;
+      --ink-20:      #b0b0c0;
+      --ink-10:      #d4d4de;
+      --white:       #f5f5f7;
+      --accent:      #6366f1;
+      --accent-dim:  #4f46e5;
+      --accent-glow: rgba(99,102,241,.15);
+      --accent-glow2:rgba(99,102,241,.08);
+      --mint:        #34d399;
+      --mint-dim:    rgba(52,211,153,.12);
+      --coral:       #f87171;
+      --coral-dim:   rgba(248,113,113,.12);
+      --amber:       #fbbf24;
+      --amber-dim:   rgba(251,191,36,.12);
+      --radius:      10px;
+      --radius-lg:   16px;
+      --radius-xl:   24px;
+      --font-display:'Instrument Serif', Georgia, serif;
+      --font-body:   'DM Sans', -apple-system, sans-serif;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: var(--font-body);
+      background: var(--ink);
+      color: var(--ink-20);
+      font-size: 16px;
+      line-height: 1.65;
+      overflow-x: hidden;
+    }
+
+    /* ── ANIMATIONS ── */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(30px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to   { opacity: 1; }
+    }
+
+    .anim-fade-up {
+      opacity: 0;
+      animation: fadeUp .7s ease-out forwards;
+    }
+    .anim-d1 { animation-delay: .1s; }
+    .anim-d2 { animation-delay: .2s; }
+    .anim-d3 { animation-delay: .3s; }
+    .anim-d4 { animation-delay: .4s; }
+    .anim-d5 { animation-delay: .5s; }
+
+    /* ── NAV ── */
+    nav {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: rgba(10,10,15,.85);
+      backdrop-filter: blur(20px) saturate(180%);
+      -webkit-backdrop-filter: blur(20px) saturate(180%);
+      border-bottom: 1px solid rgba(255,255,255,.06);
+      padding: 0 32px;
+      height: 64px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .nav-left { display: flex; align-items: center; gap: 40px; }
+
+    .logo {
+      font-family: var(--font-display);
+      font-size: 22px;
+      color: var(--white);
+      text-decoration: none;
+      letter-spacing: -.3px;
+    }
+
+    .nav-links { display: flex; gap: 28px; list-style: none; }
+    .nav-links a {
+      font-size: 14px;
+      color: var(--ink-30);
+      text-decoration: none;
+      font-weight: 500;
+      transition: color .2s;
+    }
+    .nav-links a:hover { color: var(--white); }
+
+    .nav-right { display: flex; align-items: center; gap: 12px; }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-family: var(--font-body);
+      font-size: 14px;
+      font-weight: 600;
+      padding: 9px 22px;
+      border-radius: 8px;
+      border: 1px solid transparent;
+      cursor: pointer;
+      text-decoration: none;
+      transition: all .2s ease;
+    }
+
+    .btn-primary {
+      background: var(--accent);
+      color: var(--white);
+      border-color: var(--accent);
+      box-shadow: 0 0 20px var(--accent-glow), 0 2px 8px rgba(0,0,0,.3);
+    }
+    .btn-primary:hover {
+      background: var(--accent-dim);
+      transform: translateY(-1px);
+      box-shadow: 0 0 30px var(--accent-glow), 0 4px 12px rgba(0,0,0,.4);
+    }
+
+    .btn-ghost {
+      background: transparent;
+      color: var(--ink-20);
+      border-color: var(--ink-60);
+    }
+    .btn-ghost:hover {
+      color: var(--white);
+      border-color: var(--ink-30);
+      background: rgba(255,255,255,.04);
+    }
+
+    .btn-large {
+      padding: 14px 32px;
+      font-size: 16px;
+      border-radius: 10px;
+    }
+
+    /* ── LAYOUT ── */
+    .container {
+      max-width: 1140px;
+      margin: 0 auto;
+      padding: 0 32px;
+    }
+
+    section {
+      padding: 100px 0;
+      position: relative;
+    }
+
+    .section-label {
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      color: var(--accent);
+      font-weight: 700;
+      margin-bottom: 16px;
+    }
+
+    .section-title {
+      font-family: var(--font-display);
+      font-size: 42px;
+      font-weight: 400;
+      color: var(--white);
+      line-height: 1.15;
+      margin-bottom: 16px;
+      letter-spacing: -.3px;
+    }
+
+    .section-subtitle {
+      font-size: 17px;
+      color: var(--ink-30);
+      max-width: 560px;
+      line-height: 1.6;
+    }
+
+    /* ── HERO ── */
+    .hero {
+      padding: 80px 0 100px;
+      background: radial-gradient(ellipse 70% 50% at 50% 0%, var(--accent-glow) 0%, transparent 100%);
+    }
+
+    .hero .container {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 60px;
+      align-items: center;
+    }
+
+    .hero-content { max-width: 540px; }
+
+    .hero-title {
+      font-family: var(--font-display);
+      font-size: 48px;
+      font-weight: 400;
+      color: var(--white);
+      line-height: 1.12;
+      margin-bottom: 20px;
+      letter-spacing: -.5px;
+    }
+
+    .hero-sub {
+      font-size: 18px;
+      color: var(--ink-20);
+      line-height: 1.65;
+      margin-bottom: 36px;
+    }
+
+    .hero-buttons {
+      display: flex;
+      gap: 14px;
+      flex-wrap: wrap;
+    }
+
+    .hero-image {
+      position: relative;
+    }
+
+    .hero-image img {
+      width: 100%;
+      border-radius: var(--radius-xl);
+      border: 1px solid var(--ink-70);
+      box-shadow: 0 20px 60px rgba(0,0,0,.5);
+    }
+
+    /* ── PAIN POINTS ── */
+    .pain-section {
+      background: var(--ink-90);
+      border-top: 1px solid var(--ink-70);
+      border-bottom: 1px solid var(--ink-70);
+    }
+
+    .pain-header {
+      text-align: center;
+      margin-bottom: 60px;
+    }
+
+    .pain-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 28px;
+    }
+
+    .pain-card {
+      background: var(--ink-80);
+      border: 1px solid var(--ink-70);
+      border-radius: var(--radius-lg);
+      padding: 36px 28px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .pain-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 3px;
+      background: var(--coral);
+      opacity: .6;
+    }
+
+    .pain-icon {
+      width: 44px;
+      height: 44px;
+      background: var(--coral-dim);
+      border-radius: var(--radius);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 20px;
+      font-size: 20px;
+    }
+
+    .pain-card h3 {
+      font-family: var(--font-body);
+      font-size: 17px;
+      font-weight: 700;
+      color: var(--white);
+      margin-bottom: 10px;
+      line-height: 1.35;
+    }
+
+    .pain-card p {
+      font-size: 15px;
+      color: var(--ink-30);
+      line-height: 1.6;
+    }
+
+    /* ── APPROACH ── */
+    .approach-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 60px;
+      align-items: center;
+    }
+
+    .approach-text h3 {
+      font-family: var(--font-body);
+      font-size: 15px;
+      font-weight: 700;
+      color: var(--accent);
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      margin-bottom: 24px;
+    }
+
+    .approach-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+      margin-top: 28px;
+    }
+
+    .approach-list li {
+      display: flex;
+      gap: 14px;
+      align-items: flex-start;
+    }
+
+    .approach-list .check {
+      flex-shrink: 0;
+      width: 26px;
+      height: 26px;
+      background: var(--mint-dim);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--mint);
+      font-size: 14px;
+      margin-top: 2px;
+    }
+
+    .approach-list .text-label {
+      font-size: 15px;
+      font-weight: 600;
+      color: var(--white);
+      display: block;
+    }
+
+    .approach-list .text-desc {
+      font-size: 14px;
+      color: var(--ink-30);
+      display: block;
+      margin-top: 2px;
+    }
+
+    .approach-mockup {
+      background: var(--ink-90);
+      border: 1px solid var(--ink-70);
+      border-radius: var(--radius-xl);
+      padding: 32px;
+      position: relative;
+    }
+
+    .mockup-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 24px;
+      padding-bottom: 16px;
+      border-bottom: 1px solid var(--ink-70);
+    }
+
+    .mockup-header span {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--ink-30);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    .mockup-badge {
+      font-size: 12px;
+      font-weight: 600;
+      padding: 4px 10px;
+      border-radius: 20px;
+      background: var(--accent-glow);
+      color: var(--accent);
+    }
+
+    .health-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 14px 0;
+      border-bottom: 1px solid var(--ink-80);
+    }
+
+    .health-row:last-child {
+      border-bottom: none;
+    }
+
+    .health-account {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--white);
+      flex: 1;
+    }
+
+    .health-signal {
+      font-size: 12px;
+      color: var(--ink-30);
+      flex: 1;
+      text-align: center;
+    }
+
+    .health-score {
+      font-size: 13px;
+      font-weight: 700;
+      padding: 3px 12px;
+      border-radius: 20px;
+      text-align: right;
+    }
+
+    .score-red {
+      background: var(--coral-dim);
+      color: var(--coral);
+    }
+
+    .score-amber {
+      background: var(--amber-dim);
+      color: var(--amber);
+    }
+
+    .score-green {
+      background: var(--mint-dim);
+      color: var(--mint);
+    }
+
+    /* ── COMPARISON TABLE ── */
+    .comparison-section {
+      background: var(--ink-90);
+      border-top: 1px solid var(--ink-70);
+      border-bottom: 1px solid var(--ink-70);
+    }
+
+    .comparison-header {
+      text-align: center;
+      margin-bottom: 48px;
+    }
+
+    .comparison-table {
+      width: 100%;
+      border-collapse: separate;
+      border-spacing: 0;
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+      border: 1px solid var(--ink-70);
+    }
+
+    .comparison-table thead th {
+      background: var(--ink-80);
+      padding: 18px 24px;
+      font-size: 14px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      text-align: left;
+    }
+
+    .comparison-table thead th:first-child {
+      color: var(--ink-30);
+    }
+
+    .comparison-table thead th:nth-child(2) {
+      color: var(--accent);
+    }
+
+    .comparison-table thead th:nth-child(3) {
+      color: var(--ink-40);
+    }
+
+    .comparison-table tbody td {
+      padding: 18px 24px;
+      font-size: 15px;
+      border-top: 1px solid var(--ink-70);
+    }
+
+    .comparison-table tbody td:first-child {
+      font-weight: 600;
+      color: var(--white);
+    }
+
+    .comparison-table tbody td:nth-child(2) {
+      color: var(--mint);
+      font-weight: 500;
+    }
+
+    .comparison-table tbody td:nth-child(3) {
+      color: var(--ink-30);
+    }
+
+    .comparison-table tbody tr {
+      background: var(--ink-90);
+      transition: background .2s;
+    }
+
+    .comparison-table tbody tr:hover {
+      background: var(--ink-80);
+    }
+
+    /* ── INTEGRATIONS ── */
+    .integrations-header {
+      text-align: center;
+      margin-bottom: 48px;
+    }
+
+    .integrations-grid {
+      display: flex;
+      justify-content: center;
+      gap: 24px;
+      flex-wrap: wrap;
+    }
+
+    .integration-card {
+      background: var(--ink-90);
+      border: 1px solid var(--ink-70);
+      border-radius: var(--radius-lg);
+      padding: 32px 36px;
+      text-align: center;
+      transition: border-color .2s, transform .2s;
+      min-width: 160px;
+    }
+
+    .integration-card:hover {
+      border-color: var(--ink-60);
+      transform: translateY(-2px);
+    }
+
+    .integration-icon {
+      font-size: 32px;
+      margin-bottom: 14px;
+      display: block;
+    }
+
+    .integration-name {
+      font-size: 15px;
+      font-weight: 600;
+      color: var(--white);
+      margin-bottom: 8px;
+    }
+
+    .integration-tag {
+      display: inline-block;
+      font-size: 11px;
+      font-weight: 600;
+      padding: 3px 10px;
+      border-radius: 20px;
+      background: var(--accent-glow);
+      color: var(--accent);
+      text-transform: uppercase;
+      letter-spacing: .5px;
+    }
+
+    .integration-tag.tag-crm {
+      background: var(--mint-dim);
+      color: var(--mint);
+    }
+
+    .integration-tag.tag-analytics {
+      background: var(--amber-dim);
+      color: var(--amber);
+    }
+
+    .integration-tag.tag-comms {
+      background: rgba(96,165,250,.12);
+      color: #60a5fa;
+    }
+
+    .integration-tag.tag-product {
+      background: rgba(192,132,252,.12);
+      color: #c084fc;
+    }
+
+    /* ── CTA ── */
+    .cta-section {
+      text-align: center;
+      background: radial-gradient(ellipse 60% 50% at 50% 50%, var(--accent-glow) 0%, transparent 100%);
+    }
+
+    .cta-title {
+      font-family: var(--font-display);
+      font-size: 44px;
+      font-weight: 400;
+      color: var(--white);
+      line-height: 1.15;
+      margin-bottom: 18px;
+      letter-spacing: -.3px;
+    }
+
+    .cta-subtitle {
+      font-size: 18px;
+      color: var(--ink-20);
+      margin-bottom: 36px;
+      max-width: 520px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    .cta-buttons {
+      display: flex;
+      gap: 14px;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    .cta-note {
+      margin-top: 18px;
+      font-size: 13px;
+      color: var(--ink-40);
+    }
+
+    /* ── FOOTER ── */
+    footer {
+      border-top: 1px solid var(--ink-70);
+      padding: 48px 32px;
+    }
+
+    .footer-inner {
+      max-width: 1140px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .footer-brand {
+      font-family: var(--font-display);
+      font-size: 18px;
+      color: var(--ink-20);
+    }
+
+    .footer-links {
+      display: flex;
+      gap: 24px;
+      list-style: none;
+    }
+
+    .footer-links a {
+      font-size: 13px;
+      color: var(--ink-40);
+      text-decoration: none;
+      transition: color .2s;
+    }
+    .footer-links a:hover { color: var(--white); }
+
+    .footer-copy {
+      font-size: 13px;
+      color: var(--ink-60);
+    }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 768px) {
+      .hero .container {
+        grid-template-columns: 1fr;
+        gap: 40px;
+      }
+      .hero-title { font-size: 36px; }
+      .hero-sub { font-size: 16px; }
+      .hero-buttons { flex-direction: column; align-items: stretch; }
+      .hero-buttons .btn { text-align: center; }
+      .pain-grid { grid-template-columns: 1fr; }
+      .approach-grid { grid-template-columns: 1fr; }
+      .comparison-table { font-size: 13px; }
+      .comparison-table thead th,
+      .comparison-table tbody td { padding: 12px 14px; }
+      .integrations-grid { gap: 14px; }
+      .integration-card { min-width: 140px; padding: 24px 20px; }
+      .nav-links { display: none; }
+      .section-title { font-size: 30px; }
+      .cta-title { font-size: 32px; }
+      .cta-buttons { flex-direction: column; align-items: center; }
+      .footer-inner { flex-direction: column; gap: 20px; text-align: center; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-left">
+    <a href="/index.html" class="logo">MMP</a>
+    <ul class="nav-links">
+      <li><a href="/index.html#features">Features</a></li>
+      <li><a href="/index.html#roi">ROI Calculator</a></li>
+      <li><a href="/blog/churn-prediction-software-guide.html">Blog</a></li>
+    </ul>
+  </div>
+  <div class="nav-right">
+    <a href="/demo.html" class="btn btn-ghost">See a Demo</a>
+    <a href="/index.html#cta" class="btn btn-primary">Start Free Trial</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="container">
+    <div class="hero-content">
+      <p class="section-label anim-fade-up">Churn Prediction</p>
+      <h1 class="hero-title anim-fade-up anim-d1">Customer Churn Prediction Software That Works From Day One</h1>
+      <p class="hero-sub anim-fade-up anim-d2">Most churn prediction tools take months to configure. MMP surfaces risk signals from your existing tools in under 5 minutes.</p>
+      <div class="hero-buttons anim-fade-up anim-d3">
+        <a href="/index.html#cta" class="btn btn-primary btn-large">Start Free Trial</a>
+        <a href="/demo.html" class="btn btn-ghost btn-large">See a Demo</a>
+      </div>
+    </div>
+    <div class="hero-image anim-fade-up anim-d4">
+      <img src="../images/hero-churn-prediction.png" alt="Monday Morning Playbook churn prediction dashboard showing at-risk accounts with health scores and prioritized actions" />
+    </div>
+  </div>
+</section>
+
+<!-- PAIN POINTS -->
+<section class="pain-section">
+  <div class="container">
+    <div class="pain-header">
+      <p class="section-label">The Problem</p>
+      <h2 class="section-title">Why Traditional Churn Prediction Fails CS Teams</h2>
+      <p class="section-subtitle" style="margin: 16px auto 0;">You bought the tool. Built the model. Still lost the account.</p>
+    </div>
+    <div class="pain-grid">
+      <div class="pain-card anim-fade-up anim-d1">
+        <div class="pain-icon">&#9202;</div>
+        <h3>Prediction models need months of training data</h3>
+        <p>Most ML-based churn tools require 6-12 months of historical data before they produce usable predictions. You need answers now, not next year.</p>
+      </div>
+      <div class="pain-card anim-fade-up anim-d2">
+        <div class="pain-icon">&#9888;</div>
+        <h3>False positives waste CSM time</h3>
+        <p>Model-based scoring floods your team with noise. When every account looks "at risk," your CSMs stop trusting the tool and go back to gut instinct.</p>
+      </div>
+      <div class="pain-card anim-fade-up anim-d3">
+        <div class="pain-icon">&#9201;</div>
+        <h3>By the time the model alerts you, the customer is already gone</h3>
+        <p>Probability scores update slowly and lack context. By the time a churn score crosses the threshold, the customer has already made their decision.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- MMP'S SIGNAL-DRIVEN APPROACH -->
+<section>
+  <div class="container">
+    <div class="approach-grid">
+      <div class="approach-text">
+        <p class="section-label">How MMP Works</p>
+        <h2 class="section-title">Signal-Driven Risk Scoring, Not Black-Box Models</h2>
+        <p class="section-subtitle">MMP doesn't try to predict the future with a probability score. It reads the signals your customers are already sending and turns them into a prioritized weekly action list.</p>
+        <ul class="approach-list">
+          <li>
+            <span class="check">&#10003;</span>
+            <div>
+              <span class="text-label">Usage drops detected</span>
+              <span class="text-desc">Product usage trending down over 2+ weeks triggers a risk flag automatically.</span>
+            </div>
+          </li>
+          <li>
+            <span class="check">&#10003;</span>
+            <div>
+              <span class="text-label">NPS & sentiment shifts</span>
+              <span class="text-desc">Declining NPS scores and negative Gong call sentiment surface before renewal conversations.</span>
+            </div>
+          </li>
+          <li>
+            <span class="check">&#10003;</span>
+            <div>
+              <span class="text-label">Missed contact cadence</span>
+              <span class="text-desc">Accounts that go silent get flagged. No response in 3+ weeks means it's time to act.</span>
+            </div>
+          </li>
+          <li>
+            <span class="check">&#10003;</span>
+            <div>
+              <span class="text-label">Renewal timeline context</span>
+              <span class="text-desc">Risk signals are weighted by renewal proximity. An at-risk account renewing in 30 days gets top priority.</span>
+            </div>
+          </li>
+        </ul>
+      </div>
+      <div class="approach-mockup">
+        <div class="mockup-header">
+          <span>Weekly Risk Briefing</span>
+          <span class="mockup-badge">Live</span>
+        </div>
+        <div class="health-row">
+          <span class="health-account">Acme Corp</span>
+          <span class="health-signal">Usage -38% &middot; NPS dropped</span>
+          <span class="health-score score-red">At Risk</span>
+        </div>
+        <div class="health-row">
+          <span class="health-account">TechFlow Inc</span>
+          <span class="health-signal">No contact 22 days</span>
+          <span class="health-score score-amber">Watch</span>
+        </div>
+        <div class="health-row">
+          <span class="health-account">DataSync</span>
+          <span class="health-signal">Renewal in 28 days &middot; Usage -12%</span>
+          <span class="health-score score-amber">Watch</span>
+        </div>
+        <div class="health-row">
+          <span class="health-account">CloudBase</span>
+          <span class="health-signal">Negative call sentiment (Gong)</span>
+          <span class="health-score score-red">At Risk</span>
+        </div>
+        <div class="health-row">
+          <span class="health-account">Vertex AI</span>
+          <span class="health-signal">All signals healthy</span>
+          <span class="health-score score-green">Healthy</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- COMPARISON TABLE -->
+<section class="comparison-section">
+  <div class="container">
+    <div class="comparison-header">
+      <p class="section-label">Side by Side</p>
+      <h2 class="section-title">MMP vs. Traditional Churn Prediction</h2>
+      <p class="section-subtitle" style="margin: 16px auto 0;">A different approach for teams that need results now.</p>
+    </div>
+    <table class="comparison-table">
+      <thead>
+        <tr>
+          <th>Criteria</th>
+          <th>Monday Morning Playbook</th>
+          <th>Traditional Churn Prediction</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Setup time</td>
+          <td>5 minutes</td>
+          <td>3-6 months</td>
+        </tr>
+        <tr>
+          <td>Data requirements</td>
+          <td>Uses your existing tools</td>
+          <td>Needs historical training data</td>
+        </tr>
+        <tr>
+          <td>False positive rate</td>
+          <td>Low &mdash; signal-based</td>
+          <td>High &mdash; model-based</td>
+        </tr>
+        <tr>
+          <td>Actionability</td>
+          <td>Prioritized weekly list</td>
+          <td>Probability score</td>
+        </tr>
+        <tr>
+          <td>Team adoption</td>
+          <td>Built into your Monday workflow</td>
+          <td>Another dashboard to check</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- INTEGRATIONS -->
+<section>
+  <div class="container">
+    <div class="integrations-header">
+      <p class="section-label">Integrations</p>
+      <h2 class="section-title">Connects to the Tools You Already Use</h2>
+      <p class="section-subtitle" style="margin: 16px auto 0;">OAuth-based setup. No data migration. No engineering tickets.</p>
+    </div>
+    <div class="integrations-grid">
+      <div class="integration-card anim-fade-up anim-d1">
+        <span class="integration-icon">&#128202;</span>
+        <div class="integration-name">Looker</div>
+        <span class="integration-tag tag-analytics">Analytics</span>
+      </div>
+      <div class="integration-card anim-fade-up anim-d2">
+        <span class="integration-icon">&#9729;</span>
+        <div class="integration-name">Salesforce</div>
+        <span class="integration-tag tag-crm">CRM</span>
+      </div>
+      <div class="integration-card anim-fade-up anim-d3">
+        <span class="integration-icon">&#128295;</span>
+        <div class="integration-name">Linear</div>
+        <span class="integration-tag tag-product">Product</span>
+      </div>
+      <div class="integration-card anim-fade-up anim-d4">
+        <span class="integration-icon">&#127908;</span>
+        <div class="integration-name">Gong</div>
+        <span class="integration-tag tag-comms">Conversations</span>
+      </div>
+      <div class="integration-card anim-fade-up anim-d5">
+        <span class="integration-icon">&#128172;</span>
+        <div class="integration-name">Slack</div>
+        <span class="integration-tag tag-comms">Comms</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="cta-section">
+  <div class="container" style="text-align: center;">
+    <p class="section-label">Get Started</p>
+    <h2 class="cta-title">Start Predicting Churn This Monday,<br />Not Next Quarter</h2>
+    <p class="cta-subtitle">Connect your tools, see your first risk briefing in under 5 minutes. No model training. No implementation project.</p>
+    <div class="cta-buttons">
+      <a href="/index.html#cta" class="btn btn-primary btn-large">Start Free Trial</a>
+      <a href="/demo.html" class="btn btn-ghost btn-large">See a Demo</a>
+    </div>
+    <p class="cta-note">Free 14-day trial &middot; No credit card required &middot; SOC 2 compliant</p>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-inner">
+    <span class="footer-brand">Monday Morning Playbook</span>
+    <ul class="footer-links">
+      <li><a href="/index.html#features">Features</a></li>
+      <li><a href="/index.html#roi">ROI Calculator</a></li>
+      <li><a href="/blog/churn-prediction-software-guide.html">Blog</a></li>
+      <li><a href="#">Privacy</a></li>
+      <li><a href="#">Terms</a></li>
+    </ul>
+    <span class="footer-copy">&copy; 2026 Monday Morning Playbook</span>
+  </div>
+</footer>
+
+<script>
+  // Scroll-triggered animations
+  (function() {
+    var observer = new IntersectionObserver(function(entries) {
+      entries.forEach(function(entry) {
+        if (entry.isIntersecting) {
+          entry.target.style.animationPlayState = 'running';
+          observer.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.1 });
+
+    document.querySelectorAll('.anim-fade-up').forEach(function(el) {
+      el.style.animationPlayState = 'paused';
+      observer.observe(el);
+    });
+  })();
+</script>
+
+</body>
+</html>

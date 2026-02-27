@@ -1,0 +1,1369 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Customer Health Score Template | Monday Morning Playbook</title>
+  <meta name="description" content="Free customer health score template for B2B SaaS CS teams. Build a scoring framework that predicts churn — then automate it with Monday Morning Playbook." />
+  <link rel="canonical" href="https://mondaymorningplaybook.com/solutions/customer-health-score-template.html" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@0,400;0,500;0,700&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --ink:         #0a0a0f;
+      --ink-90:      #16161f;
+      --ink-80:      #1e1e2a;
+      --ink-70:      #2a2a3a;
+      --ink-60:      #3a3a4e;
+      --ink-40:      #6b6b82;
+      --ink-30:      #8e8ea3;
+      --ink-20:      #b0b0c0;
+      --ink-10:      #d4d4de;
+      --white:       #f5f5f7;
+      --accent:      #6366f1;
+      --accent-dim:  #4f46e5;
+      --accent-glow: rgba(99,102,241,.15);
+      --accent-glow2:rgba(99,102,241,.08);
+      --mint:        #34d399;
+      --mint-dim:    rgba(52,211,153,.12);
+      --coral:       #f87171;
+      --coral-dim:   rgba(248,113,113,.12);
+      --amber:       #fbbf24;
+      --amber-dim:   rgba(251,191,36,.12);
+      --radius:      10px;
+      --radius-lg:   16px;
+      --radius-xl:   24px;
+      --font-display:'Instrument Serif', Georgia, serif;
+      --font-body:   'DM Sans', -apple-system, sans-serif;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: var(--font-body);
+      background: var(--ink);
+      color: var(--ink-20);
+      font-size: 16px;
+      line-height: 1.65;
+      overflow-x: hidden;
+    }
+
+    /* ── ANIMATIONS ── */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(30px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to   { opacity: 1; }
+    }
+    @keyframes pulse {
+      0%, 100% { opacity: .6; }
+      50% { opacity: 1; }
+    }
+    @keyframes float {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-6px); }
+    }
+
+    .anim-fade-up {
+      opacity: 0;
+      animation: fadeUp .7s ease-out forwards;
+    }
+    .anim-d1 { animation-delay: .1s; }
+    .anim-d2 { animation-delay: .2s; }
+    .anim-d3 { animation-delay: .3s; }
+    .anim-d4 { animation-delay: .4s; }
+    .anim-d5 { animation-delay: .5s; }
+    .anim-d6 { animation-delay: .6s; }
+    .anim-d7 { animation-delay: .7s; }
+
+    /* ── NAV ── */
+    nav {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: rgba(10,10,15,.85);
+      backdrop-filter: blur(20px) saturate(180%);
+      -webkit-backdrop-filter: blur(20px) saturate(180%);
+      border-bottom: 1px solid rgba(255,255,255,.06);
+      padding: 0 32px;
+      height: 64px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .nav-left { display: flex; align-items: center; gap: 40px; }
+
+    .logo {
+      font-family: var(--font-display);
+      font-size: 22px;
+      color: var(--white);
+      text-decoration: none;
+      letter-spacing: -.3px;
+    }
+
+    .nav-links { display: flex; gap: 28px; list-style: none; }
+    .nav-links a {
+      font-size: 14px;
+      color: var(--ink-30);
+      text-decoration: none;
+      font-weight: 500;
+      transition: color .2s;
+    }
+    .nav-links a:hover { color: var(--white); }
+
+    .nav-right { display: flex; align-items: center; gap: 12px; }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-family: var(--font-body);
+      font-size: 14px;
+      font-weight: 600;
+      padding: 9px 22px;
+      border-radius: 8px;
+      border: 1px solid transparent;
+      cursor: pointer;
+      text-decoration: none;
+      transition: all .2s ease;
+    }
+
+    .btn-primary {
+      background: var(--accent);
+      color: var(--white);
+      border-color: var(--accent);
+      box-shadow: 0 0 20px var(--accent-glow), 0 2px 8px rgba(0,0,0,.3);
+    }
+    .btn-primary:hover {
+      background: var(--accent-dim);
+      transform: translateY(-1px);
+      box-shadow: 0 0 30px var(--accent-glow), 0 4px 12px rgba(0,0,0,.4);
+    }
+
+    .btn-ghost {
+      background: transparent;
+      color: var(--ink-20);
+      border-color: var(--ink-60);
+    }
+    .btn-ghost:hover {
+      color: var(--white);
+      border-color: var(--ink-30);
+      background: rgba(255,255,255,.04);
+    }
+
+    .btn-large {
+      padding: 14px 32px;
+      font-size: 16px;
+      border-radius: 10px;
+    }
+
+    /* ── LAYOUT ── */
+    .container {
+      max-width: 1140px;
+      margin: 0 auto;
+      padding: 0 32px;
+    }
+
+    section {
+      padding: 100px 0;
+      position: relative;
+    }
+
+    .section-label {
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      color: var(--accent);
+      font-weight: 700;
+      margin-bottom: 16px;
+    }
+
+    .section-title {
+      font-family: var(--font-display);
+      font-size: 42px;
+      font-weight: 400;
+      color: var(--white);
+      line-height: 1.15;
+      margin-bottom: 16px;
+      letter-spacing: -.3px;
+    }
+
+    .section-subtitle {
+      font-size: 17px;
+      color: var(--ink-30);
+      max-width: 540px;
+      line-height: 1.7;
+    }
+
+    .section-header {
+      text-align: center;
+      margin-bottom: 60px;
+    }
+
+    .section-header .section-subtitle {
+      margin: 0 auto;
+    }
+
+    .section-divider {
+      border: none;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, var(--ink-60), transparent);
+      margin: 0;
+    }
+
+    /* ── HERO ── */
+    .hero-wrap {
+      position: relative;
+      overflow: hidden;
+      padding: 100px 0 60px;
+    }
+
+    .hero-wrap::before {
+      content: '';
+      position: absolute;
+      top: -200px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 900px;
+      height: 900px;
+      background: radial-gradient(circle, var(--accent-glow) 0%, transparent 70%);
+      pointer-events: none;
+    }
+
+    .hero-wrap::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      right: -100px;
+      width: 500px;
+      height: 500px;
+      background: radial-gradient(circle, rgba(52,211,153,.06) 0%, transparent 70%);
+      pointer-events: none;
+    }
+
+    .hero {
+      max-width: 1140px;
+      margin: 0 auto;
+      padding: 0 32px;
+      text-align: center;
+      position: relative;
+      z-index: 1;
+    }
+
+    .hero-eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: var(--accent-glow2);
+      border: 1px solid rgba(99,102,241,.2);
+      border-radius: 100px;
+      padding: 6px 16px;
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--accent);
+      margin-bottom: 32px;
+    }
+
+    .hero-eyebrow .dot {
+      width: 6px; height: 6px;
+      border-radius: 50%;
+      background: var(--accent);
+      animation: pulse 2s ease-in-out infinite;
+    }
+
+    .hero-title {
+      font-family: var(--font-display);
+      font-size: 56px;
+      font-weight: 400;
+      color: var(--white);
+      line-height: 1.1;
+      margin-bottom: 24px;
+      letter-spacing: -.5px;
+    }
+
+    .hero-title em {
+      font-style: italic;
+      color: var(--accent);
+    }
+
+    .hero-sub {
+      font-size: 19px;
+      color: var(--ink-30);
+      max-width: 580px;
+      margin: 0 auto 40px;
+      line-height: 1.6;
+    }
+
+    .hero-buttons {
+      display: flex;
+      gap: 14px;
+      justify-content: center;
+      margin-bottom: 60px;
+    }
+
+    .hero-image {
+      max-width: 780px;
+      margin: 0 auto;
+      border-radius: var(--radius-xl);
+      overflow: hidden;
+      box-shadow: 0 40px 80px rgba(0,0,0,.5), 0 0 60px var(--accent-glow2);
+      border: 1px solid var(--ink-70);
+    }
+
+    .hero-image img {
+      width: 100%;
+      display: block;
+    }
+
+    .hero-image-placeholder {
+      width: 100%;
+      aspect-ratio: 16 / 9;
+      background: linear-gradient(135deg, var(--ink-80) 0%, var(--ink-90) 50%, var(--ink-80) 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--ink-40);
+      font-size: 14px;
+    }
+
+    /* ── PAIN CARDS ── */
+    .pain-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+    }
+
+    .pain-card {
+      background: var(--ink-90);
+      border: 1px solid var(--ink-70);
+      border-radius: var(--radius-lg);
+      padding: 32px;
+      transition: border-color .3s, transform .3s;
+    }
+    .pain-card:hover {
+      border-color: var(--ink-60);
+      transform: translateY(-2px);
+    }
+
+    .pain-icon {
+      width: 44px; height: 44px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+      font-weight: 700;
+      margin-bottom: 20px;
+    }
+
+    .pain-icon.red { background: var(--coral-dim); color: var(--coral); }
+    .pain-icon.yellow { background: var(--amber-dim); color: var(--amber); }
+    .pain-icon.blue { background: var(--accent-glow); color: var(--accent); }
+
+    .pain-title {
+      font-family: var(--font-display);
+      font-size: 20px;
+      color: var(--white);
+      margin-bottom: 10px;
+    }
+
+    .pain-desc {
+      font-size: 14px;
+      color: var(--ink-30);
+      line-height: 1.7;
+    }
+
+    /* ── TEMPLATE SECTION ── */
+    .template-intro {
+      text-align: center;
+      max-width: 640px;
+      margin: 0 auto 48px;
+    }
+
+    .template-intro p {
+      font-size: 16px;
+      color: var(--ink-30);
+      line-height: 1.7;
+    }
+
+    .template-grid {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .dimension-card {
+      background: var(--ink-90);
+      border: 1px solid var(--ink-70);
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+      transition: border-color .3s;
+    }
+    .dimension-card:hover {
+      border-color: var(--ink-60);
+    }
+
+    .dimension-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 24px 28px;
+      border-bottom: 1px solid var(--ink-70);
+    }
+
+    .dimension-header-left {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .dimension-icon {
+      width: 44px; height: 44px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+      font-weight: 700;
+    }
+
+    .dimension-name {
+      font-family: var(--font-display);
+      font-size: 22px;
+      color: var(--white);
+    }
+
+    .dimension-weight {
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--accent);
+      background: var(--accent-glow);
+      padding: 6px 14px;
+      border-radius: 100px;
+    }
+
+    .dimension-body {
+      padding: 24px 28px;
+    }
+
+    .dimension-signals-label {
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      color: var(--ink-40);
+      font-weight: 700;
+      margin-bottom: 12px;
+    }
+
+    .signal-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 20px;
+    }
+
+    .signal-tag {
+      display: inline-block;
+      padding: 5px 12px;
+      border-radius: 6px;
+      font-size: 13px;
+      font-weight: 500;
+      background: var(--ink-80);
+      border: 1px solid var(--ink-70);
+      color: var(--ink-10);
+    }
+
+    .threshold-row {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+    }
+
+    .threshold-card {
+      padding: 14px 16px;
+      border-radius: var(--radius);
+      text-align: center;
+    }
+
+    .threshold-card.green {
+      background: var(--mint-dim);
+      border: 1px solid rgba(52,211,153,.2);
+    }
+    .threshold-card.yellow {
+      background: var(--amber-dim);
+      border: 1px solid rgba(251,191,36,.2);
+    }
+    .threshold-card.red {
+      background: var(--coral-dim);
+      border: 1px solid rgba(248,113,113,.2);
+    }
+
+    .threshold-label {
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      font-weight: 700;
+      margin-bottom: 4px;
+    }
+
+    .threshold-card.green .threshold-label { color: var(--mint); }
+    .threshold-card.yellow .threshold-label { color: var(--amber); }
+    .threshold-card.red .threshold-label { color: var(--coral); }
+
+    .threshold-value {
+      font-size: 14px;
+      font-weight: 600;
+    }
+
+    .threshold-card.green .threshold-value { color: var(--mint); }
+    .threshold-card.yellow .threshold-value { color: var(--amber); }
+    .threshold-card.red .threshold-value { color: var(--coral); }
+
+    /* ── WEIGHT BAR VISUALIZATION ── */
+    .weight-bar-wrap {
+      margin-bottom: 48px;
+    }
+
+    .weight-bar {
+      display: flex;
+      height: 40px;
+      border-radius: var(--radius);
+      overflow: hidden;
+      margin-bottom: 12px;
+      border: 1px solid var(--ink-70);
+    }
+
+    .weight-segment {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--white);
+      transition: flex .3s;
+    }
+
+    .weight-segment:nth-child(1) { background: var(--accent); flex: 30; }
+    .weight-segment:nth-child(2) { background: var(--accent-dim); flex: 25; }
+    .weight-segment:nth-child(3) { background: var(--coral); flex: 15; opacity: .85; }
+    .weight-segment:nth-child(4) { background: var(--amber); flex: 15; color: var(--ink); }
+    .weight-segment:nth-child(5) { background: var(--mint); flex: 15; color: var(--ink); }
+
+    .weight-legend {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 20px;
+      justify-content: center;
+    }
+
+    .weight-legend-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 13px;
+      color: var(--ink-20);
+    }
+
+    .weight-legend-dot {
+      width: 10px; height: 10px;
+      border-radius: 3px;
+    }
+
+    /* ── STEPS FLOW ── */
+    .steps {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 20px;
+      position: relative;
+    }
+
+    .steps::before {
+      content: '';
+      position: absolute;
+      top: 36px;
+      left: 12%;
+      right: 12%;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, var(--ink-60), var(--ink-60), transparent);
+    }
+
+    .step {
+      text-align: center;
+      position: relative;
+    }
+
+    .step-number {
+      width: 52px; height: 52px;
+      border-radius: 50%;
+      background: var(--ink-80);
+      border: 2px solid var(--accent);
+      color: var(--accent);
+      font-size: 18px;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 20px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .step-title {
+      font-family: var(--font-display);
+      font-size: 20px;
+      color: var(--white);
+      margin-bottom: 8px;
+    }
+
+    .step-desc {
+      font-size: 14px;
+      color: var(--ink-30);
+      line-height: 1.7;
+    }
+
+    /* ── AUTOMATION SECTION ── */
+    .automation-layout {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 60px;
+      align-items: center;
+    }
+
+    .automation-content .section-label {
+      text-align: left;
+    }
+
+    .automation-content .section-title {
+      text-align: left;
+      font-size: 36px;
+    }
+
+    .automation-content p {
+      font-size: 16px;
+      color: var(--ink-30);
+      line-height: 1.7;
+      margin-bottom: 20px;
+    }
+
+    .automation-list {
+      list-style: none;
+      margin-bottom: 32px;
+    }
+
+    .automation-list li {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      padding: 10px 0;
+      font-size: 15px;
+      color: var(--ink-20);
+      border-bottom: 1px solid var(--ink-80);
+    }
+
+    .automation-list li:last-child {
+      border-bottom: none;
+    }
+
+    .check-icon {
+      width: 22px; height: 22px;
+      min-width: 22px;
+      border-radius: 50%;
+      background: var(--mint-dim);
+      color: var(--mint);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 12px;
+      font-weight: 700;
+      margin-top: 2px;
+    }
+
+    .automation-mockup {
+      background: var(--ink-90);
+      border: 1px solid var(--ink-70);
+      border-radius: var(--radius-xl);
+      overflow: hidden;
+      box-shadow: 0 40px 80px rgba(0,0,0,.4), 0 0 40px var(--accent-glow2);
+      animation: float 6s ease-in-out infinite;
+    }
+
+    .mockup-bar {
+      background: var(--ink-80);
+      border-bottom: 1px solid var(--ink-70);
+      padding: 12px 18px;
+      display: flex;
+      align-items: center;
+      gap: 7px;
+    }
+
+    .mockup-dot {
+      width: 10px; height: 10px;
+      border-radius: 50%;
+    }
+    .mockup-dot:nth-child(1) { background: var(--coral); }
+    .mockup-dot:nth-child(2) { background: var(--amber); }
+    .mockup-dot:nth-child(3) { background: var(--mint); }
+
+    .mockup-body { padding: 20px; }
+
+    .mockup-health-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 12px 16px;
+      background: var(--ink-80);
+      border: 1px solid var(--ink-70);
+      border-radius: var(--radius);
+      margin-bottom: 8px;
+      font-size: 13px;
+    }
+    .mockup-health-row:last-child { margin-bottom: 0; }
+
+    .mockup-health-dot {
+      width: 8px; height: 8px;
+      border-radius: 50%;
+      flex-shrink: 0;
+    }
+    .mockup-health-dot.red { background: var(--coral); box-shadow: 0 0 6px rgba(248,113,113,.4); }
+    .mockup-health-dot.yellow { background: var(--amber); box-shadow: 0 0 6px rgba(251,191,36,.4); }
+    .mockup-health-dot.green { background: var(--mint); box-shadow: 0 0 6px rgba(52,211,153,.4); }
+
+    .mockup-account { font-weight: 600; color: var(--ink-10); flex: 1; }
+    .mockup-score { font-size: 12px; color: var(--ink-40); margin-right: 8px; }
+
+    .mockup-badge {
+      font-size: 10px;
+      font-weight: 700;
+      padding: 2px 8px;
+      border-radius: 100px;
+      text-transform: uppercase;
+      letter-spacing: .3px;
+    }
+    .mockup-badge.red { background: var(--coral-dim); color: var(--coral); }
+    .mockup-badge.yellow { background: var(--amber-dim); color: var(--amber); }
+    .mockup-badge.green { background: var(--mint-dim); color: var(--mint); }
+
+    .mockup-section-label {
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: .8px;
+      color: var(--ink-40);
+      font-weight: 700;
+      margin-bottom: 8px;
+      padding: 0 4px;
+    }
+
+    .mockup-score-breakdown {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 6px;
+      margin-top: 16px;
+    }
+
+    .mockup-score-item {
+      background: var(--ink-80);
+      border: 1px solid var(--ink-70);
+      border-radius: 8px;
+      padding: 10px 8px;
+      text-align: center;
+    }
+
+    .mockup-score-item-label {
+      font-size: 9px;
+      text-transform: uppercase;
+      letter-spacing: .5px;
+      color: var(--ink-40);
+      margin-bottom: 4px;
+    }
+
+    .mockup-score-item-value {
+      font-size: 16px;
+      font-weight: 700;
+      font-family: var(--font-display);
+    }
+
+    .mockup-score-item-value.green { color: var(--mint); }
+    .mockup-score-item-value.yellow { color: var(--amber); }
+    .mockup-score-item-value.red { color: var(--coral); }
+
+    /* ── CTA ── */
+    .cta-section {
+      text-align: center;
+      position: relative;
+      padding: 100px 0;
+      overflow: hidden;
+    }
+
+    .cta-section::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(ellipse at center, var(--accent-glow) 0%, transparent 60%);
+      pointer-events: none;
+    }
+
+    .cta-title {
+      font-family: var(--font-display);
+      font-size: 48px;
+      color: var(--white);
+      margin-bottom: 16px;
+      position: relative;
+    }
+
+    .cta-sub {
+      font-size: 18px;
+      color: var(--ink-30);
+      max-width: 500px;
+      margin: 0 auto 36px;
+      position: relative;
+    }
+
+    .cta-buttons {
+      display: flex;
+      gap: 14px;
+      justify-content: center;
+      position: relative;
+    }
+
+    /* ── FOOTER ── */
+    footer {
+      border-top: 1px solid var(--ink-70);
+      padding: 48px 32px;
+    }
+
+    .footer-inner {
+      max-width: 1140px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .footer-brand {
+      font-family: var(--font-display);
+      font-size: 18px;
+      color: var(--ink-20);
+    }
+
+    .footer-links {
+      display: flex;
+      gap: 24px;
+      list-style: none;
+    }
+
+    .footer-links a {
+      font-size: 13px;
+      color: var(--ink-40);
+      text-decoration: none;
+      transition: color .2s;
+    }
+    .footer-links a:hover { color: var(--white); }
+
+    .footer-copy {
+      font-size: 13px;
+      color: var(--ink-60);
+    }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 768px) {
+      .hero-title { font-size: 34px; }
+      .hero-sub { font-size: 17px; }
+      .hero-buttons { flex-direction: column; align-items: center; }
+      .pain-grid { grid-template-columns: 1fr; }
+      .steps { grid-template-columns: 1fr 1fr; }
+      .steps::before { display: none; }
+      .threshold-row { grid-template-columns: 1fr; }
+      .automation-layout { grid-template-columns: 1fr; }
+      .nav-links { display: none; }
+      .footer-inner { flex-direction: column; gap: 20px; text-align: center; }
+      .cta-buttons { flex-direction: column; align-items: center; }
+      .section-title { font-size: 30px; }
+      .cta-title { font-size: 32px; }
+      nav { padding: 0 20px; }
+      .container { padding: 0 20px; }
+      .hero { padding: 0 20px; }
+      section { padding: 72px 0; }
+      .weight-bar { height: 32px; }
+      .weight-segment { font-size: 10px; }
+      .dimension-header { flex-direction: column; align-items: flex-start; gap: 12px; }
+      .mockup-score-breakdown { grid-template-columns: repeat(3, 1fr); }
+      .footer-links { flex-wrap: wrap; justify-content: center; }
+    }
+
+    @media (max-width: 480px) {
+      .steps { grid-template-columns: 1fr; }
+      .signal-tags { gap: 6px; }
+      .mockup-score-breakdown { grid-template-columns: repeat(2, 1fr); }
+    }
+  </style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-left">
+    <a href="/index.html" class="logo">Monday Morning Playbook</a>
+    <ul class="nav-links">
+      <li><a href="/index.html#features">Features</a></li>
+      <li><a href="/index.html#roi">ROI Calculator</a></li>
+      <li><a href="/blog/customer-health-score-template-guide.html">Blog</a></li>
+    </ul>
+  </div>
+  <div class="nav-right">
+    <a href="/demo.html" class="btn btn-ghost">See a Demo</a>
+    <a href="/index.html#cta" class="btn btn-primary">Start Free Trial</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<div class="hero-wrap">
+  <div class="hero">
+    <div class="hero-eyebrow anim-fade-up anim-d1">
+      <span class="dot"></span>
+      Free Template
+    </div>
+    <h1 class="hero-title anim-fade-up anim-d2">Customer Health Score Template:<br><em>Build a Framework That Predicts Churn</em></h1>
+    <p class="hero-sub anim-fade-up anim-d3">A free health score framework your team can use today &mdash; plus the tool that automates it.</p>
+    <div class="hero-buttons anim-fade-up anim-d4">
+      <a href="#template" class="btn btn-primary btn-large">See the Template</a>
+      <a href="/index.html#cta" class="btn btn-ghost btn-large">Start Free Trial</a>
+    </div>
+
+    <div class="hero-image anim-fade-up anim-d5">
+      <img src="../images/hero-health-score.png" alt="Customer health score template preview showing five scoring dimensions with color-coded thresholds" onerror="this.parentElement.innerHTML='<div class=hero-image-placeholder>Health Score Template Preview</div>'">
+    </div>
+  </div>
+</div>
+
+<hr class="section-divider">
+
+<!-- WHY YOU NEED A HEALTH SCORE -->
+<section id="why">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-label anim-fade-up">The Problem</div>
+      <h2 class="section-title anim-fade-up anim-d1">Why you need a customer health score</h2>
+      <p class="section-subtitle anim-fade-up anim-d2">Without a structured scoring framework, your team is guessing which accounts need attention. Here is what that looks like in practice.</p>
+    </div>
+    <div class="pain-grid">
+      <div class="pain-card anim-fade-up anim-d3">
+        <div class="pain-icon red">!</div>
+        <div class="pain-title">Vibes-based risk assessment fails at scale</div>
+        <div class="pain-desc">When your team manages 20 accounts each, gut instinct works. At 40 or more, critical churn signals slip through the cracks because no one can hold that much context in their head.</div>
+      </div>
+      <div class="pain-card anim-fade-up anim-d4">
+        <div class="pain-icon yellow">?</div>
+        <div class="pain-title">Inconsistent scoring across CSMs creates blind spots</div>
+        <div class="pain-desc">One CSM flags an account as "at risk" based on usage. Another looks at NPS. A third checks support tickets. Without a shared framework, your team's assessments are incomparable.</div>
+      </div>
+      <div class="pain-card anim-fade-up anim-d5">
+        <div class="pain-icon blue">1</div>
+        <div class="pain-title">You need a framework before you need a tool</div>
+        <div class="pain-desc">Buying a CS platform before defining what "healthy" means for your accounts is like automating a broken process. Get the framework right first, then automate it.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<hr class="section-divider">
+
+<!-- THE TEMPLATE -->
+<section id="template">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-label anim-fade-up">The Template</div>
+      <h2 class="section-title anim-fade-up anim-d1">A customer health score framework<br>you can use today</h2>
+      <p class="section-subtitle anim-fade-up anim-d2">Five dimensions, weighted by impact. Each dimension has clear signals and color-coded thresholds so your entire team scores accounts the same way.</p>
+    </div>
+
+    <!-- Weight Bar Visualization -->
+    <div class="weight-bar-wrap anim-fade-up anim-d3">
+      <div class="weight-bar">
+        <div class="weight-segment">30%</div>
+        <div class="weight-segment">25%</div>
+        <div class="weight-segment">15%</div>
+        <div class="weight-segment">15%</div>
+        <div class="weight-segment">15%</div>
+      </div>
+      <div class="weight-legend">
+        <div class="weight-legend-item">
+          <div class="weight-legend-dot" style="background: var(--accent);"></div>
+          Product Usage
+        </div>
+        <div class="weight-legend-item">
+          <div class="weight-legend-dot" style="background: var(--accent-dim);"></div>
+          Engagement
+        </div>
+        <div class="weight-legend-item">
+          <div class="weight-legend-dot" style="background: var(--coral); opacity: .85;"></div>
+          Support Trends
+        </div>
+        <div class="weight-legend-item">
+          <div class="weight-legend-dot" style="background: var(--amber);"></div>
+          NPS / CSAT
+        </div>
+        <div class="weight-legend-item">
+          <div class="weight-legend-dot" style="background: var(--mint);"></div>
+          Contract Status
+        </div>
+      </div>
+    </div>
+
+    <!-- Dimension Cards -->
+    <div class="template-grid">
+
+      <!-- 1. Product Usage -->
+      <div class="dimension-card anim-fade-up anim-d3">
+        <div class="dimension-header">
+          <div class="dimension-header-left">
+            <div class="dimension-icon" style="background: var(--accent-glow); color: var(--accent);">U</div>
+            <div class="dimension-name">Product Usage</div>
+          </div>
+          <div class="dimension-weight">Weight: 30%</div>
+        </div>
+        <div class="dimension-body">
+          <div class="dimension-signals-label">Signals to Track</div>
+          <div class="signal-tags">
+            <span class="signal-tag">Daily Active Users</span>
+            <span class="signal-tag">Feature Adoption Rate</span>
+            <span class="signal-tag">Login Frequency</span>
+          </div>
+          <div class="threshold-row">
+            <div class="threshold-card green">
+              <div class="threshold-label">Healthy</div>
+              <div class="threshold-value">&gt; 80% of licensed seats active</div>
+            </div>
+            <div class="threshold-card yellow">
+              <div class="threshold-label">Watch</div>
+              <div class="threshold-value">40 &ndash; 80% of licensed seats active</div>
+            </div>
+            <div class="threshold-card red">
+              <div class="threshold-label">At Risk</div>
+              <div class="threshold-value">&lt; 40% of licensed seats active</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 2. Engagement -->
+      <div class="dimension-card anim-fade-up anim-d4">
+        <div class="dimension-header">
+          <div class="dimension-header-left">
+            <div class="dimension-icon" style="background: var(--accent-glow); color: var(--accent-dim);">E</div>
+            <div class="dimension-name">Engagement</div>
+          </div>
+          <div class="dimension-weight">Weight: 25%</div>
+        </div>
+        <div class="dimension-body">
+          <div class="dimension-signals-label">Signals to Track</div>
+          <div class="signal-tags">
+            <span class="signal-tag">Meeting Attendance</span>
+            <span class="signal-tag">Email Response Rate</span>
+            <span class="signal-tag">Champion Activity</span>
+          </div>
+          <div class="threshold-row">
+            <div class="threshold-card green">
+              <div class="threshold-label">Healthy</div>
+              <div class="threshold-value">Regular meetings, &lt; 24h reply time, active champion</div>
+            </div>
+            <div class="threshold-card yellow">
+              <div class="threshold-label">Watch</div>
+              <div class="threshold-value">Missed 1+ meetings, 24&ndash;72h reply, champion quiet</div>
+            </div>
+            <div class="threshold-card red">
+              <div class="threshold-label">At Risk</div>
+              <div class="threshold-value">No meetings in 30d, &gt; 72h reply, champion departed</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 3. Support Trends -->
+      <div class="dimension-card anim-fade-up anim-d5">
+        <div class="dimension-header">
+          <div class="dimension-header-left">
+            <div class="dimension-icon" style="background: var(--coral-dim); color: var(--coral);">S</div>
+            <div class="dimension-name">Support Trends</div>
+          </div>
+          <div class="dimension-weight">Weight: 15%</div>
+        </div>
+        <div class="dimension-body">
+          <div class="dimension-signals-label">Signals to Track</div>
+          <div class="signal-tags">
+            <span class="signal-tag">Ticket Volume (30d)</span>
+            <span class="signal-tag">Ticket Severity</span>
+            <span class="signal-tag">Avg. Resolution Time</span>
+          </div>
+          <div class="threshold-row">
+            <div class="threshold-card green">
+              <div class="threshold-label">Healthy</div>
+              <div class="threshold-value">&le; 2 tickets / mo, no P1s, resolved &lt; 24h</div>
+            </div>
+            <div class="threshold-card yellow">
+              <div class="threshold-label">Watch</div>
+              <div class="threshold-value">3&ndash;5 tickets / mo, 1 P1, resolved 24&ndash;72h</div>
+            </div>
+            <div class="threshold-card red">
+              <div class="threshold-label">At Risk</div>
+              <div class="threshold-value">&gt; 5 tickets / mo, 2+ P1s, &gt; 72h resolution</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 4. NPS/CSAT -->
+      <div class="dimension-card anim-fade-up anim-d6">
+        <div class="dimension-header">
+          <div class="dimension-header-left">
+            <div class="dimension-icon" style="background: var(--amber-dim); color: var(--amber);">N</div>
+            <div class="dimension-name">NPS / CSAT</div>
+          </div>
+          <div class="dimension-weight">Weight: 15%</div>
+        </div>
+        <div class="dimension-body">
+          <div class="dimension-signals-label">Signals to Track</div>
+          <div class="signal-tags">
+            <span class="signal-tag">NPS Score</span>
+            <span class="signal-tag">CSAT Score</span>
+            <span class="signal-tag">Survey Response Rate</span>
+          </div>
+          <div class="threshold-row">
+            <div class="threshold-card green">
+              <div class="threshold-label">Healthy</div>
+              <div class="threshold-value">NPS &ge; 40, CSAT &ge; 4.5, &gt; 50% response rate</div>
+            </div>
+            <div class="threshold-card yellow">
+              <div class="threshold-label">Watch</div>
+              <div class="threshold-value">NPS 10&ndash;39, CSAT 3.5&ndash;4.4, 20&ndash;50% response</div>
+            </div>
+            <div class="threshold-card red">
+              <div class="threshold-label">At Risk</div>
+              <div class="threshold-value">NPS &lt; 10, CSAT &lt; 3.5, &lt; 20% response rate</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 5. Contract Status -->
+      <div class="dimension-card anim-fade-up anim-d7">
+        <div class="dimension-header">
+          <div class="dimension-header-left">
+            <div class="dimension-icon" style="background: var(--mint-dim); color: var(--mint);">C</div>
+            <div class="dimension-name">Contract Status</div>
+          </div>
+          <div class="dimension-weight">Weight: 15%</div>
+        </div>
+        <div class="dimension-body">
+          <div class="dimension-signals-label">Signals to Track</div>
+          <div class="signal-tags">
+            <span class="signal-tag">Days to Renewal</span>
+            <span class="signal-tag">Expansion Discussions</span>
+            <span class="signal-tag">Contract Value Trend</span>
+          </div>
+          <div class="threshold-row">
+            <div class="threshold-card green">
+              <div class="threshold-label">Healthy</div>
+              <div class="threshold-value">&gt; 90d to renewal, active expansion, value growing</div>
+            </div>
+            <div class="threshold-card yellow">
+              <div class="threshold-label">Watch</div>
+              <div class="threshold-value">30&ndash;90d to renewal, no expansion, value flat</div>
+            </div>
+            <div class="threshold-card red">
+              <div class="threshold-label">At Risk</div>
+              <div class="threshold-value">&lt; 30d to renewal, downsell signals, value declining</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<hr class="section-divider">
+
+<!-- HOW TO USE IT -->
+<section id="how-to-use">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-label anim-fade-up">Implementation</div>
+      <h2 class="section-title anim-fade-up anim-d1">How to use this template</h2>
+      <p class="section-subtitle anim-fade-up anim-d2">Four steps to go from no health scoring to a consistent, team-wide framework.</p>
+    </div>
+    <div class="steps">
+      <div class="step anim-fade-up anim-d3">
+        <div class="step-number">1</div>
+        <h3 class="step-title">Define Dimensions</h3>
+        <p class="step-desc">Start with the five dimensions above. Remove any that don't apply to your product, and add domain-specific ones if needed.</p>
+      </div>
+      <div class="step anim-fade-up anim-d4">
+        <div class="step-number">2</div>
+        <h3 class="step-title">Assign Weights</h3>
+        <p class="step-desc">Weight each dimension based on how predictive it is of churn or expansion. Product usage is typically the strongest signal.</p>
+      </div>
+      <div class="step anim-fade-up anim-d5">
+        <div class="step-number">3</div>
+        <h3 class="step-title">Set Thresholds</h3>
+        <p class="step-desc">Define green, yellow, and red thresholds with your team. Use historical data to calibrate. Adjust as you learn.</p>
+      </div>
+      <div class="step anim-fade-up anim-d6">
+        <div class="step-number">4</div>
+        <h3 class="step-title">Review Weekly</h3>
+        <p class="step-desc">Review scores every Monday. Use them to prioritize outreach, flag at-risk accounts, and surface expansion opportunities.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<hr class="section-divider">
+
+<!-- FROM TEMPLATE TO AUTOMATION -->
+<section id="automation">
+  <div class="container">
+    <div class="automation-layout">
+      <div class="automation-content anim-fade-up">
+        <div class="section-label">From Template to Automation</div>
+        <h2 class="section-title">This template works.<br>Updating it manually every Monday doesn't.</h2>
+        <p>Your team will use this framework for a few weeks. Then the spreadsheet stops getting updated, the scoring becomes inconsistent again, and you are back to square one.</p>
+        <p>Monday Morning Playbook automates this exact framework. It pulls signals from your existing tools, calculates health scores automatically, and delivers a prioritized briefing every Monday morning.</p>
+        <ul class="automation-list">
+          <li>
+            <span class="check-icon">&#10003;</span>
+            <span>Auto-calculates health scores from Looker, Salesforce, Gong, and Slack</span>
+          </li>
+          <li>
+            <span class="check-icon">&#10003;</span>
+            <span>Delivers a weekly digest with scores, trends, and recommended actions</span>
+          </li>
+          <li>
+            <span class="check-icon">&#10003;</span>
+            <span>Flags at-risk accounts before your team even opens a single tool</span>
+          </li>
+          <li>
+            <span class="check-icon">&#10003;</span>
+            <span>Live in under 5 minutes &mdash; no 3-month implementation project</span>
+          </li>
+        </ul>
+        <a href="/index.html#cta" class="btn btn-primary btn-large">Start Free Trial</a>
+      </div>
+      <div class="automation-mockup anim-fade-up anim-d3">
+        <div class="mockup-bar">
+          <div class="mockup-dot"></div>
+          <div class="mockup-dot"></div>
+          <div class="mockup-dot"></div>
+        </div>
+        <div class="mockup-body">
+          <div class="mockup-section-label">Account Health Scores</div>
+          <div class="mockup-health-row">
+            <div class="mockup-health-dot red"></div>
+            <span class="mockup-account">Mesa Urgent Care</span>
+            <span class="mockup-score">Score: 32</span>
+            <span class="mockup-badge red">Risk</span>
+          </div>
+          <div class="mockup-health-row">
+            <div class="mockup-health-dot yellow"></div>
+            <span class="mockup-account">Valley Medical Group</span>
+            <span class="mockup-score">Score: 58</span>
+            <span class="mockup-badge yellow">Watch</span>
+          </div>
+          <div class="mockup-health-row">
+            <div class="mockup-health-dot green"></div>
+            <span class="mockup-account">Summit Health Clinics</span>
+            <span class="mockup-score">Score: 87</span>
+            <span class="mockup-badge green">Healthy</span>
+          </div>
+          <div class="mockup-health-row">
+            <div class="mockup-health-dot green"></div>
+            <span class="mockup-account">Pacific Wellness</span>
+            <span class="mockup-score">Score: 91</span>
+            <span class="mockup-badge green">Healthy</span>
+          </div>
+          <div class="mockup-score-breakdown">
+            <div class="mockup-score-item">
+              <div class="mockup-score-item-label">Usage</div>
+              <div class="mockup-score-item-value red">22%</div>
+            </div>
+            <div class="mockup-score-item">
+              <div class="mockup-score-item-label">Engage</div>
+              <div class="mockup-score-item-value red">35%</div>
+            </div>
+            <div class="mockup-score-item">
+              <div class="mockup-score-item-label">Support</div>
+              <div class="mockup-score-item-value yellow">55%</div>
+            </div>
+            <div class="mockup-score-item">
+              <div class="mockup-score-item-label">NPS</div>
+              <div class="mockup-score-item-value yellow">42%</div>
+            </div>
+            <div class="mockup-score-item">
+              <div class="mockup-score-item-label">Contract</div>
+              <div class="mockup-score-item-value red">18%</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<div class="cta-section" id="cta">
+  <div class="container">
+    <h2 class="cta-title anim-fade-up">Start with the template.<br>Graduate to the tool.</h2>
+    <p class="cta-sub anim-fade-up anim-d1">Free 14-day trial. No credit card required. Your first health scores calculated in under 5 minutes.</p>
+    <div class="cta-buttons anim-fade-up anim-d2">
+      <a href="/index.html#cta" class="btn btn-primary btn-large">Start Free Trial</a>
+      <a href="/demo.html" class="btn btn-ghost btn-large">See a Demo</a>
+    </div>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-inner">
+    <span class="footer-brand">Monday Morning Playbook</span>
+    <ul class="footer-links">
+      <li><a href="/index.html#features">Features</a></li>
+      <li><a href="/index.html#roi">ROI Calculator</a></li>
+      <li><a href="/solutions/customer-churn-prevention.html">Churn Prevention</a></li>
+      <li><a href="/blog/customer-health-score-template-guide.html">Blog</a></li>
+      <li><a href="#">Privacy</a></li>
+      <li><a href="#">Terms</a></li>
+    </ul>
+    <span class="footer-copy">&copy; 2026 Monday Morning Playbook</span>
+  </div>
+</footer>
+
+<script>
+  // Scroll-triggered animations
+  (function() {
+    var observer = new IntersectionObserver(function(entries) {
+      entries.forEach(function(entry) {
+        if (entry.isIntersecting) {
+          entry.target.style.animationPlayState = 'running';
+          observer.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.1 });
+
+    document.querySelectorAll('.anim-fade-up').forEach(function(el) {
+      el.style.animationPlayState = 'paused';
+      observer.observe(el);
+    });
+
+    // Re-enable hero animations immediately
+    document.querySelectorAll('.hero .anim-fade-up, .hero-wrap .anim-fade-up').forEach(function(el) {
+      el.style.animationPlayState = 'running';
+    });
+  })();
+</script>
+
+</body>
+</html>

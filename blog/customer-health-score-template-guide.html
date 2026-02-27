@@ -1,0 +1,1033 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Customer Health Score Template: Build a Scoring Framework in 30 Minutes</title>
+  <meta name="description" content="Free customer health score template for B2B SaaS CS teams. Learn how to define dimensions, set weights, and build a framework that predicts churn — plus how to automate it." />
+  <link rel="canonical" href="https://mondaymorningplaybook.com/blog/customer-health-score-template-guide.html" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@0,400;0,500;0,700&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --ink:         #0a0a0f;
+      --ink-90:      #16161f;
+      --ink-80:      #1e1e2a;
+      --ink-70:      #2a2a3a;
+      --ink-60:      #3a3a4e;
+      --ink-40:      #6b6b82;
+      --ink-30:      #8e8ea3;
+      --ink-20:      #b0b0c0;
+      --ink-10:      #d4d4de;
+      --white:       #f5f5f7;
+      --accent:      #6366f1;
+      --accent-dim:  #4f46e5;
+      --accent-glow: rgba(99,102,241,.15);
+      --accent-glow2:rgba(99,102,241,.08);
+      --mint:        #34d399;
+      --mint-dim:    rgba(52,211,153,.12);
+      --coral:       #f87171;
+      --coral-dim:   rgba(248,113,113,.12);
+      --amber:       #fbbf24;
+      --amber-dim:   rgba(251,191,36,.12);
+      --radius:      10px;
+      --radius-lg:   16px;
+      --radius-xl:   24px;
+      --font-display:'Instrument Serif', Georgia, serif;
+      --font-body:   'DM Sans', -apple-system, sans-serif;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: var(--font-body);
+      background: var(--ink);
+      color: var(--ink-20);
+      font-size: 16px;
+      line-height: 1.65;
+      overflow-x: hidden;
+    }
+
+    /* ── ANIMATIONS ── */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(30px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    .anim-fade-up {
+      opacity: 0;
+      animation: fadeUp .7s ease-out forwards;
+    }
+    .anim-d1 { animation-delay: .1s; }
+    .anim-d2 { animation-delay: .2s; }
+    .anim-d3 { animation-delay: .3s; }
+    .anim-d4 { animation-delay: .4s; }
+
+    /* ── NAV ── */
+    nav {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: rgba(10,10,15,.85);
+      backdrop-filter: blur(20px) saturate(180%);
+      -webkit-backdrop-filter: blur(20px) saturate(180%);
+      border-bottom: 1px solid rgba(255,255,255,.06);
+      padding: 0 32px;
+      height: 64px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .nav-left { display: flex; align-items: center; gap: 40px; }
+
+    .logo {
+      font-family: var(--font-display);
+      font-size: 22px;
+      color: var(--white);
+      text-decoration: none;
+      letter-spacing: -.3px;
+    }
+
+    .nav-links { display: flex; gap: 28px; list-style: none; }
+    .nav-links a {
+      font-size: 14px;
+      color: var(--ink-30);
+      text-decoration: none;
+      font-weight: 500;
+      transition: color .2s;
+    }
+    .nav-links a:hover { color: var(--white); }
+
+    .nav-right { display: flex; align-items: center; gap: 12px; }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-family: var(--font-body);
+      font-size: 14px;
+      font-weight: 600;
+      padding: 9px 22px;
+      border-radius: 8px;
+      border: 1px solid transparent;
+      cursor: pointer;
+      text-decoration: none;
+      transition: all .2s ease;
+    }
+
+    .btn-primary {
+      background: var(--accent);
+      color: var(--white);
+      border-color: var(--accent);
+      box-shadow: 0 0 20px var(--accent-glow), 0 2px 8px rgba(0,0,0,.3);
+    }
+    .btn-primary:hover {
+      background: var(--accent-dim);
+      transform: translateY(-1px);
+      box-shadow: 0 0 30px var(--accent-glow), 0 4px 12px rgba(0,0,0,.4);
+    }
+
+    .btn-ghost {
+      background: transparent;
+      color: var(--ink-20);
+      border-color: var(--ink-60);
+    }
+    .btn-ghost:hover {
+      color: var(--white);
+      border-color: var(--ink-30);
+      background: rgba(255,255,255,.04);
+    }
+
+    .btn-large {
+      padding: 14px 32px;
+      font-size: 16px;
+      border-radius: 10px;
+    }
+
+    /* ── BLOG HERO ── */
+    .blog-hero {
+      position: relative;
+      padding: 80px 0 40px;
+      overflow: hidden;
+    }
+
+    .blog-hero::before {
+      content: '';
+      position: absolute;
+      top: -200px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 800px;
+      height: 800px;
+      background: radial-gradient(circle, var(--accent-glow) 0%, transparent 70%);
+      pointer-events: none;
+    }
+
+    .blog-hero-inner {
+      max-width: 720px;
+      margin: 0 auto;
+      padding: 0 32px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .blog-meta {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      margin-bottom: 24px;
+    }
+
+    .blog-category {
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      color: var(--accent);
+      font-weight: 700;
+      background: var(--accent-glow2);
+      border: 1px solid rgba(99,102,241,.2);
+      padding: 4px 12px;
+      border-radius: 100px;
+    }
+
+    .blog-date {
+      font-size: 14px;
+      color: var(--ink-40);
+    }
+
+    .blog-hero h1 {
+      font-family: var(--font-display);
+      font-size: 48px;
+      font-weight: 400;
+      color: var(--white);
+      line-height: 1.1;
+      margin-bottom: 20px;
+      letter-spacing: -.3px;
+    }
+
+    .blog-hero-subtitle {
+      font-size: 19px;
+      color: var(--ink-30);
+      line-height: 1.6;
+      margin-bottom: 40px;
+    }
+
+    .blog-hero-image {
+      max-width: 720px;
+      margin: 0 auto;
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+      border: 1px solid var(--ink-70);
+      box-shadow: 0 20px 60px rgba(0,0,0,.4);
+    }
+
+    .blog-hero-image img {
+      width: 100%;
+      display: block;
+    }
+
+    .blog-hero-image-placeholder {
+      width: 100%;
+      aspect-ratio: 16 / 9;
+      background: linear-gradient(135deg, var(--ink-80) 0%, var(--ink-90) 50%, var(--ink-80) 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--ink-40);
+      font-size: 14px;
+    }
+
+    /* ── ARTICLE ── */
+    article {
+      max-width: 720px;
+      margin: 0 auto;
+      padding: 60px 32px 100px;
+    }
+
+    article h2 {
+      font-family: var(--font-display);
+      font-size: 34px;
+      font-weight: 400;
+      color: var(--white);
+      line-height: 1.2;
+      margin: 56px 0 20px;
+      letter-spacing: -.2px;
+    }
+
+    article h3 {
+      font-family: var(--font-display);
+      font-size: 24px;
+      font-weight: 400;
+      color: var(--white);
+      line-height: 1.3;
+      margin: 40px 0 14px;
+    }
+
+    article p {
+      font-size: 16px;
+      color: var(--ink-20);
+      line-height: 1.8;
+      margin-bottom: 20px;
+    }
+
+    article ul, article ol {
+      margin: 0 0 20px 24px;
+      font-size: 16px;
+      color: var(--ink-20);
+      line-height: 1.8;
+    }
+
+    article li {
+      margin-bottom: 8px;
+    }
+
+    article strong {
+      color: var(--ink-10);
+      font-weight: 600;
+    }
+
+    article em {
+      color: var(--ink-10);
+    }
+
+    article a {
+      color: var(--accent);
+      text-decoration: underline;
+      text-underline-offset: 3px;
+      transition: color .2s;
+    }
+    article a:hover { color: var(--white); }
+
+    article blockquote {
+      border-left: 3px solid var(--accent);
+      padding: 16px 24px;
+      margin: 28px 0;
+      background: var(--accent-glow2);
+      border-radius: 0 var(--radius) var(--radius) 0;
+      font-style: italic;
+      color: var(--ink-10);
+    }
+
+    article blockquote p {
+      color: var(--ink-10);
+      margin-bottom: 0;
+    }
+
+    /* ── INLINE TABLES ── */
+    .health-table {
+      width: 100%;
+      border-collapse: separate;
+      border-spacing: 0;
+      margin: 24px 0 32px;
+      border-radius: var(--radius);
+      overflow: hidden;
+      border: 1px solid var(--ink-70);
+    }
+
+    .health-table thead th {
+      background: var(--ink-80);
+      padding: 12px 16px;
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      font-weight: 700;
+      text-align: left;
+      border-bottom: 1px solid var(--ink-70);
+    }
+
+    .health-table thead th:first-child { color: var(--ink-30); }
+    .health-table thead th.green { color: var(--mint); }
+    .health-table thead th.yellow { color: var(--amber); }
+    .health-table thead th.red { color: var(--coral); }
+
+    .health-table tbody td {
+      padding: 12px 16px;
+      font-size: 14px;
+      border-bottom: 1px solid var(--ink-80);
+      vertical-align: top;
+      line-height: 1.6;
+    }
+
+    .health-table tbody tr:last-child td {
+      border-bottom: none;
+    }
+
+    .health-table tbody td:first-child {
+      color: var(--ink-10);
+      font-weight: 600;
+      white-space: nowrap;
+    }
+
+    .health-table tbody td.green { color: var(--mint); background: var(--mint-dim); }
+    .health-table tbody td.yellow { color: var(--amber); background: var(--amber-dim); }
+    .health-table tbody td.red { color: var(--coral); background: var(--coral-dim); }
+
+    /* ── INLINE CTA BOX ── */
+    .inline-cta {
+      background: var(--ink-90);
+      border: 1px solid var(--ink-70);
+      border-radius: var(--radius-lg);
+      padding: 36px;
+      margin: 40px 0;
+      text-align: center;
+    }
+
+    .inline-cta h3 {
+      font-family: var(--font-display);
+      font-size: 26px;
+      color: var(--white);
+      margin: 0 0 12px;
+    }
+
+    .inline-cta p {
+      font-size: 15px;
+      color: var(--ink-30);
+      max-width: 500px;
+      margin: 0 auto 24px;
+    }
+
+    /* ── STEP CARDS ── */
+    .step-card {
+      background: var(--ink-90);
+      border: 1px solid var(--ink-70);
+      border-radius: var(--radius-lg);
+      padding: 28px;
+      margin-bottom: 16px;
+    }
+
+    .step-card-header {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      margin-bottom: 12px;
+    }
+
+    .step-number {
+      width: 36px; height: 36px;
+      min-width: 36px;
+      border-radius: 50%;
+      background: var(--ink-80);
+      border: 2px solid var(--accent);
+      color: var(--accent);
+      font-size: 15px;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .step-card-title {
+      font-family: var(--font-display);
+      font-size: 20px;
+      color: var(--white);
+    }
+
+    .step-card p {
+      font-size: 15px;
+      color: var(--ink-30);
+      line-height: 1.7;
+      margin-bottom: 0;
+    }
+
+    /* ── RELATED POSTS ── */
+    .related-posts {
+      margin-top: 60px;
+      padding-top: 40px;
+      border-top: 1px solid var(--ink-70);
+    }
+
+    .related-posts h3 {
+      font-family: var(--font-display);
+      font-size: 22px;
+      color: var(--white);
+      margin-bottom: 20px;
+    }
+
+    .related-links {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+    }
+
+    .related-links li {
+      margin-bottom: 0;
+    }
+
+    .related-links a {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 14px 0;
+      border-bottom: 1px solid var(--ink-80);
+      color: var(--ink-10);
+      text-decoration: none;
+      font-size: 15px;
+      font-weight: 500;
+      transition: color .2s;
+    }
+    .related-links a:hover { color: var(--accent); }
+
+    .related-links .arrow {
+      color: var(--accent);
+      font-size: 18px;
+      transition: transform .2s;
+    }
+    .related-links a:hover .arrow { transform: translateX(4px); }
+
+    /* ── CTA SECTION ── */
+    .cta-section {
+      text-align: center;
+      position: relative;
+      padding: 100px 0;
+      overflow: hidden;
+    }
+
+    .cta-section::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(ellipse at center, var(--accent-glow) 0%, transparent 60%);
+      pointer-events: none;
+    }
+
+    .cta-title {
+      font-family: var(--font-display);
+      font-size: 42px;
+      color: var(--white);
+      margin-bottom: 16px;
+      position: relative;
+    }
+
+    .cta-sub {
+      font-size: 18px;
+      color: var(--ink-30);
+      max-width: 500px;
+      margin: 0 auto 36px;
+      position: relative;
+    }
+
+    .cta-buttons {
+      display: flex;
+      gap: 14px;
+      justify-content: center;
+      position: relative;
+    }
+
+    .container {
+      max-width: 1140px;
+      margin: 0 auto;
+      padding: 0 32px;
+    }
+
+    /* ── FOOTER ── */
+    footer {
+      border-top: 1px solid var(--ink-70);
+      padding: 48px 32px;
+    }
+
+    .footer-inner {
+      max-width: 1140px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .footer-brand {
+      font-family: var(--font-display);
+      font-size: 18px;
+      color: var(--ink-20);
+    }
+
+    .footer-links {
+      display: flex;
+      gap: 24px;
+      list-style: none;
+    }
+
+    .footer-links a {
+      font-size: 13px;
+      color: var(--ink-40);
+      text-decoration: none;
+      transition: color .2s;
+    }
+    .footer-links a:hover { color: var(--white); }
+
+    .footer-copy {
+      font-size: 13px;
+      color: var(--ink-60);
+    }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 768px) {
+      .blog-hero h1 { font-size: 32px; }
+      .blog-hero-subtitle { font-size: 17px; }
+      article h2 { font-size: 28px; }
+      article h3 { font-size: 21px; }
+      .nav-links { display: none; }
+      .footer-inner { flex-direction: column; gap: 20px; text-align: center; }
+      .cta-buttons { flex-direction: column; align-items: center; }
+      .cta-title { font-size: 30px; }
+      nav { padding: 0 20px; }
+      article { padding: 40px 20px 80px; }
+      .blog-hero-inner { padding: 0 20px; }
+      .inline-cta { padding: 28px 20px; }
+      .health-table { font-size: 12px; }
+      .health-table thead th,
+      .health-table tbody td { padding: 8px 10px; }
+      .footer-links { flex-wrap: wrap; justify-content: center; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-left">
+    <a href="/index.html" class="logo">Monday Morning Playbook</a>
+    <ul class="nav-links">
+      <li><a href="/index.html#features">Features</a></li>
+      <li><a href="/index.html#roi">ROI Calculator</a></li>
+      <li><a href="/solutions/customer-health-score-template.html">Health Score Template</a></li>
+    </ul>
+  </div>
+  <div class="nav-right">
+    <a href="/demo.html" class="btn btn-ghost">See a Demo</a>
+    <a href="/index.html#cta" class="btn btn-primary">Start Free Trial</a>
+  </div>
+</nav>
+
+<!-- BLOG HERO -->
+<div class="blog-hero">
+  <div class="blog-hero-inner">
+    <div class="blog-meta anim-fade-up">
+      <span class="blog-category">Customer Success</span>
+      <span class="blog-date">February 26, 2026</span>
+    </div>
+    <h1 class="anim-fade-up anim-d1">Customer Health Score Template: A Step-by-Step Framework for CS Teams</h1>
+    <p class="blog-hero-subtitle anim-fade-up anim-d2">Build a scoring system your entire team trusts &mdash; in 30 minutes, not 3 months.</p>
+    <div class="blog-hero-image anim-fade-up anim-d3">
+      <img src="../images/blog-health-score.png" alt="Customer health score template framework diagram showing five scoring dimensions" onerror="this.parentElement.innerHTML='<div class=blog-hero-image-placeholder>Customer Health Score Template Guide</div>'">
+    </div>
+  </div>
+</div>
+
+<!-- ARTICLE -->
+<article>
+
+  <p>A health score is only useful if your team trusts it.</p>
+
+  <p>And most customer health scores fail not because the data is wrong, but because the framework behind them is either too vague, too complicated, or too disconnected from what CSMs actually see in their accounts every day.</p>
+
+  <p>This guide gives you a complete customer health score template you can implement in a single afternoon. We will walk through the five dimensions that matter, how to weight them, what thresholds to set, and how to roll this out to your team so that every CSM is scoring accounts the same way.</p>
+
+  <p>If you have tried health scoring before and given up because it felt like a science project, this template is built for you. No data science degree required. No six-month implementation. Just a structured framework that predicts churn and surfaces expansion opportunities &mdash; starting this week.</p>
+
+  <!-- ═══════════════════════════════════════════ -->
+  <h2>What Is a Customer Health Score?</h2>
+
+  <p>A customer health score is a composite metric that tells you how likely a customer is to renew, expand, or churn. It aggregates signals from product usage, engagement, support, satisfaction, and contract data into a single score that your team can act on.</p>
+
+  <p>Think of it as a credit score for your customer relationships. A high score means the account is healthy, engaged, and likely to renew. A low score means something is wrong and your team needs to intervene before it is too late.</p>
+
+  <h3>Why It Matters</h3>
+
+  <p>Without a health score, your team is doing risk assessment by vibes. Each CSM has their own mental model of what "healthy" looks like, which means:</p>
+
+  <ul>
+    <li><strong>Inconsistent prioritization.</strong> One CSM flags an account as at-risk because usage dropped. Another misses the same signal because they were focused on NPS scores. There is no shared language for risk.</li>
+    <li><strong>Late detection.</strong> By the time a CSM recognizes churn risk through ad hoc observation, the customer has already made their decision. Health scores surface risk weeks earlier by tracking leading indicators.</li>
+    <li><strong>Missed expansion.</strong> Healthy accounts with high usage, strong engagement, and upcoming renewals are your best expansion candidates. Without scoring, these opportunities get buried under firefighting.</li>
+  </ul>
+
+  <h3>Common Mistakes</h3>
+
+  <p>Before we get into the template, here are three mistakes that kill most health score initiatives:</p>
+
+  <ol>
+    <li><strong>Too many dimensions.</strong> Teams try to track 15 or more signals and the framework collapses under its own weight. Five dimensions is the sweet spot for most B2B SaaS companies.</li>
+    <li><strong>No clear thresholds.</strong> A score of 72 is meaningless if your team does not know whether that is good, bad, or somewhere in between. You need explicit green, yellow, and red thresholds that everyone understands.</li>
+    <li><strong>Set it and forget it.</strong> Health scores are not a one-time project. Thresholds need calibration, weights need adjustment, and your team needs to review scores weekly to build trust in the system.</li>
+  </ol>
+
+  <!-- ═══════════════════════════════════════════ -->
+  <h2>The 5 Dimensions of a Customer Health Score</h2>
+
+  <p>This template uses five dimensions, each weighted by how predictive it is of renewal or churn. The weights below are starting points based on patterns across B2B SaaS companies managing 100 or more accounts. Adjust them based on your own data once you have a few months of scoring history.</p>
+
+  <!-- ── Dimension 1: Product Usage ── -->
+  <h3>1. Product Usage (Weight: 30%)</h3>
+
+  <p>Product usage is the strongest leading indicator of account health. A customer who is not using your product is a customer who will not renew &mdash; no matter how many QBRs you run or how friendly the champion is.</p>
+
+  <p><strong>Signals to track:</strong></p>
+  <ul>
+    <li><strong>Daily Active Users (DAU)</strong> as a percentage of licensed seats. This is the most important single metric in your health score.</li>
+    <li><strong>Feature adoption rate.</strong> Are customers using the features that drive the most value, or are they stuck on basic functionality?</li>
+    <li><strong>Login frequency.</strong> How often are users logging in over a rolling 30-day window? Declining logins are an early warning signal.</li>
+  </ul>
+
+  <table class="health-table">
+    <thead>
+      <tr>
+        <th>Signal</th>
+        <th class="green">Healthy</th>
+        <th class="yellow">Watch</th>
+        <th class="red">At Risk</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Active seats</td>
+        <td class="green">&gt; 80%</td>
+        <td class="yellow">40 &ndash; 80%</td>
+        <td class="red">&lt; 40%</td>
+      </tr>
+      <tr>
+        <td>Feature adoption</td>
+        <td class="green">&gt; 60% of core features</td>
+        <td class="yellow">30 &ndash; 60%</td>
+        <td class="red">&lt; 30%</td>
+      </tr>
+      <tr>
+        <td>Login frequency</td>
+        <td class="green">Daily or near-daily</td>
+        <td class="yellow">Weekly</td>
+        <td class="red">Less than weekly</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <p><strong>Why 30%:</strong> Usage is the most predictive dimension across virtually every B2B SaaS company. If customers are not using the product, nothing else matters. Weight it highest.</p>
+
+  <!-- ── Dimension 2: Engagement ── -->
+  <h3>2. Engagement (Weight: 25%)</h3>
+
+  <p>Engagement measures the strength of your relationship with the account. High usage with low engagement is a red flag &mdash; it means the product is sticky but the relationship is not, which makes you vulnerable when a competitor comes knocking.</p>
+
+  <p><strong>Signals to track:</strong></p>
+  <ul>
+    <li><strong>Meeting attendance.</strong> Are stakeholders showing up to QBRs, check-ins, and training sessions? Declining attendance is a relationship warning sign.</li>
+    <li><strong>Email response rate.</strong> How quickly and consistently do contacts respond to your CSM's outreach? Slow replies and ghosting often precede churn.</li>
+    <li><strong>Champion activity.</strong> Is your primary champion active, responsive, and still in role? A departed or disengaged champion is one of the strongest churn predictors.</li>
+  </ul>
+
+  <table class="health-table">
+    <thead>
+      <tr>
+        <th>Signal</th>
+        <th class="green">Healthy</th>
+        <th class="yellow">Watch</th>
+        <th class="red">At Risk</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Meeting attendance</td>
+        <td class="green">Regular, on schedule</td>
+        <td class="yellow">Missed 1+ in 60d</td>
+        <td class="red">No meetings in 30d</td>
+      </tr>
+      <tr>
+        <td>Email response time</td>
+        <td class="green">&lt; 24 hours</td>
+        <td class="yellow">24 &ndash; 72 hours</td>
+        <td class="red">&gt; 72 hours or no reply</td>
+      </tr>
+      <tr>
+        <td>Champion status</td>
+        <td class="green">Active, engaged</td>
+        <td class="yellow">Quiet, less responsive</td>
+        <td class="red">Departed or unresponsive</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <p><strong>Why 25%:</strong> Engagement is the second strongest predictor of renewal. A strong relationship gives you time to fix usage issues. A weak relationship means you will not even get the chance.</p>
+
+  <!-- ── Dimension 3: Support Trends ── -->
+  <h3>3. Support Trends (Weight: 15%)</h3>
+
+  <p>Support data is a lagging indicator &mdash; by the time a customer is filing tickets, they have already hit a problem. But the pattern of support interactions tells you a lot about trajectory. A sudden spike in ticket volume, especially high-severity tickets, is a strong churn signal.</p>
+
+  <p><strong>Signals to track:</strong></p>
+  <ul>
+    <li><strong>Ticket volume (rolling 30 days).</strong> More tickets means more friction. Track the trend, not just the absolute number.</li>
+    <li><strong>Ticket severity distribution.</strong> A few low-severity tickets is normal. Multiple P1s in a month is a fire alarm.</li>
+    <li><strong>Average resolution time.</strong> Are you solving problems quickly, or are customers waiting days for a fix? Slow resolution erodes trust.</li>
+  </ul>
+
+  <table class="health-table">
+    <thead>
+      <tr>
+        <th>Signal</th>
+        <th class="green">Healthy</th>
+        <th class="yellow">Watch</th>
+        <th class="red">At Risk</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Tickets / month</td>
+        <td class="green">&le; 2</td>
+        <td class="yellow">3 &ndash; 5</td>
+        <td class="red">&gt; 5</td>
+      </tr>
+      <tr>
+        <td>P1 tickets</td>
+        <td class="green">None</td>
+        <td class="yellow">1 in 30d</td>
+        <td class="red">2+ in 30d</td>
+      </tr>
+      <tr>
+        <td>Resolution time</td>
+        <td class="green">&lt; 24 hours</td>
+        <td class="yellow">24 &ndash; 72 hours</td>
+        <td class="red">&gt; 72 hours</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <p><strong>Why 15%:</strong> Support trends are important but less predictive than usage and engagement. High ticket volume sometimes indicates high adoption, not dissatisfaction. Use it as a modifier, not a primary signal.</p>
+
+  <!-- ── Dimension 4: NPS/CSAT ── -->
+  <h3>4. NPS / CSAT (Weight: 15%)</h3>
+
+  <p>Satisfaction scores are the most direct measure of how customers feel about your product and team. The challenge is that survey response rates are often low, which makes the data incomplete. Weight this dimension equally with Support Trends as a secondary signal.</p>
+
+  <p><strong>Signals to track:</strong></p>
+  <ul>
+    <li><strong>NPS score.</strong> Promoters (9-10) are your expansion candidates. Detractors (0-6) are your churn risks. Track the trend across survey periods.</li>
+    <li><strong>CSAT score.</strong> Post-interaction CSAT gives you more frequent data points than NPS. Look for sustained dips below 4.0.</li>
+    <li><strong>Survey response rate.</strong> Low response rates are a signal in themselves. Customers who stop responding to surveys are often already disengaged.</li>
+  </ul>
+
+  <table class="health-table">
+    <thead>
+      <tr>
+        <th>Signal</th>
+        <th class="green">Healthy</th>
+        <th class="yellow">Watch</th>
+        <th class="red">At Risk</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>NPS score</td>
+        <td class="green">&ge; 40</td>
+        <td class="yellow">10 &ndash; 39</td>
+        <td class="red">&lt; 10</td>
+      </tr>
+      <tr>
+        <td>CSAT score</td>
+        <td class="green">&ge; 4.5</td>
+        <td class="yellow">3.5 &ndash; 4.4</td>
+        <td class="red">&lt; 3.5</td>
+      </tr>
+      <tr>
+        <td>Response rate</td>
+        <td class="green">&gt; 50%</td>
+        <td class="yellow">20 &ndash; 50%</td>
+        <td class="red">&lt; 20%</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <p><strong>Why 15%:</strong> NPS and CSAT are useful but infrequent and often incomplete. They work best as a confirming signal &mdash; if usage and engagement are down AND NPS just dropped 20 points, you have a serious problem.</p>
+
+  <!-- ── Dimension 5: Contract Status ── -->
+  <h3>5. Contract Status (Weight: 15%)</h3>
+
+  <p>Contract data tells you about timing and trajectory. An account that is 120 days from renewal with flat contract value is in a very different position than one that is 20 days out with downsell signals. This dimension helps you prioritize based on urgency.</p>
+
+  <p><strong>Signals to track:</strong></p>
+  <ul>
+    <li><strong>Days to renewal.</strong> Accounts inside 30 days need immediate attention. Accounts inside 90 days need a renewal plan. Beyond 90 days, you have time to course-correct.</li>
+    <li><strong>Expansion discussions.</strong> Active upsell or cross-sell conversations are a strong positive signal. No expansion activity after 6+ months is neutral to negative.</li>
+    <li><strong>Contract value trend.</strong> Is the account growing, flat, or shrinking? A pattern of downsells is a churn precursor.</li>
+  </ul>
+
+  <table class="health-table">
+    <thead>
+      <tr>
+        <th>Signal</th>
+        <th class="green">Healthy</th>
+        <th class="yellow">Watch</th>
+        <th class="red">At Risk</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Days to renewal</td>
+        <td class="green">&gt; 90 days</td>
+        <td class="yellow">30 &ndash; 90 days</td>
+        <td class="red">&lt; 30 days</td>
+      </tr>
+      <tr>
+        <td>Expansion activity</td>
+        <td class="green">Active discussions</td>
+        <td class="yellow">No activity</td>
+        <td class="red">Downsell signals</td>
+      </tr>
+      <tr>
+        <td>Contract value</td>
+        <td class="green">Growing</td>
+        <td class="yellow">Flat</td>
+        <td class="red">Declining</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <p><strong>Why 15%:</strong> Contract status is about timing, not prediction. It amplifies the urgency of signals from other dimensions. A red account with 20 days to renewal is a much higher priority than a red account with 180 days.</p>
+
+  <!-- ── INLINE CTA ── -->
+  <div class="inline-cta">
+    <h3>Want this automated?</h3>
+    <p>Monday Morning Playbook calculates health scores from your existing tools &mdash; Looker, Salesforce, Gong, and Slack &mdash; and delivers them to your team every Monday morning.</p>
+    <a href="/index.html#cta" class="btn btn-primary btn-large">Start Free Trial</a>
+  </div>
+
+  <!-- ═══════════════════════════════════════════ -->
+  <h2>How to Implement This Template</h2>
+
+  <p>You have the framework. Now here is how to roll it out so your team actually uses it.</p>
+
+  <div class="step-card">
+    <div class="step-card-header">
+      <div class="step-number">1</div>
+      <div class="step-card-title">Audit Your Data Sources</div>
+    </div>
+    <p>Before you start scoring, map where each signal lives. Product usage is probably in your analytics tool (Looker, Amplitude, Mixpanel). Engagement data is in your CRM and email. Support tickets are in Zendesk or Intercom. NPS is in Delighted or a survey tool. Contract data is in Salesforce.</p>
+    <p style="margin-top: 12px;">For each signal, ask: Can we pull this data reliably? How often is it updated? If a signal is not accessible or requires manual entry, deprioritize it or remove it from the framework. A health score that depends on data your team has to manually enter will not get maintained.</p>
+  </div>
+
+  <div class="step-card">
+    <div class="step-card-header">
+      <div class="step-number">2</div>
+      <div class="step-card-title">Map Signals to Dimensions</div>
+    </div>
+    <p>Using the five dimensions above as a starting point, assign your actual signals to each category. You may find that some signals do not fit neatly &mdash; that is fine. The goal is coverage, not perfection. Each dimension should have 2 to 4 signals. More than that creates complexity without adding predictive value.</p>
+  </div>
+
+  <div class="step-card">
+    <div class="step-card-header">
+      <div class="step-number">3</div>
+      <div class="step-card-title">Set Thresholds With Your Team</div>
+    </div>
+    <p>Do not set thresholds in a vacuum. Bring your CSMs into the conversation. Pull up 10 accounts your team considers "healthy" and 10 they consider "at risk." Look at the actual data for those accounts and let the patterns guide your green, yellow, and red cutoffs. This calibration exercise takes about 30 minutes and is the single most important step in building trust in the system.</p>
+  </div>
+
+  <div class="step-card">
+    <div class="step-card-header">
+      <div class="step-number">4</div>
+      <div class="step-card-title">Review Weekly and Adjust</div>
+    </div>
+    <p>Set a recurring weekly review where the team looks at health scores, discusses accounts that changed status, and flags any scores that feel wrong. Use these flags to refine thresholds over time. After 4 to 6 weeks of weekly reviews, your team will trust the scores and start using them proactively instead of reactively.</p>
+  </div>
+
+  <!-- ═══════════════════════════════════════════ -->
+  <h2>From Manual to Automated</h2>
+
+  <p>If you have read this far, you are serious about building a health score framework. The template above will work &mdash; your team can start scoring accounts this week using a shared spreadsheet and the thresholds we defined.</p>
+
+  <p>But here is what will happen: for the first three or four weeks, someone on your team will dutifully update the spreadsheet every Monday. Then they will go on vacation, or have a packed week, or get pulled into a fire drill. The spreadsheet stops getting updated. Scores go stale. Your team stops trusting them. And six months later you are back to vibes-based risk assessment.</p>
+
+  <p>This is exactly the problem <a href="/index.html">Monday Morning Playbook</a> solves. It implements this health scoring framework automatically by pulling data from the tools your team already uses:</p>
+
+  <ul>
+    <li><strong>Product usage data</strong> from Looker or your analytics platform</li>
+    <li><strong>Engagement signals</strong> from Salesforce, Gong, and email</li>
+    <li><strong>Support trends</strong> from your ticketing system</li>
+    <li><strong>Satisfaction scores</strong> from your NPS/CSAT tool</li>
+    <li><strong>Contract data</strong> from Salesforce</li>
+  </ul>
+
+  <p>Every Monday at 7 AM, your team gets a briefing with updated health scores, trend changes, and a prioritized action queue. No spreadsheet to maintain. No manual data assembly. Just a clear answer to the three questions that matter: <em>what is on fire, what is growing, and what to do first.</em></p>
+
+  <p>The template gives you the framework. The tool gives you the automation. Start with the template today, and when you are ready to stop updating spreadsheets, <a href="/index.html#cta">start your free trial</a>.</p>
+
+  <!-- ── RELATED POSTS ── -->
+  <div class="related-posts">
+    <h3>Related Resources</h3>
+    <ul class="related-links">
+      <li>
+        <a href="/solutions/customer-health-score-template.html">
+          <span class="arrow">&rarr;</span>
+          Customer Health Score Template (interactive landing page)
+        </a>
+      </li>
+      <li>
+        <a href="/solutions/customer-churn-prevention.html">
+          <span class="arrow">&rarr;</span>
+          Customer Churn Prevention Software
+        </a>
+      </li>
+      <li>
+        <a href="/blog/customer-churn-prevention-guide.html">
+          <span class="arrow">&rarr;</span>
+          How to Build a Churn Prevention Playbook
+        </a>
+      </li>
+    </ul>
+  </div>
+
+</article>
+
+<!-- CTA -->
+<div class="cta-section" id="cta">
+  <div class="container">
+    <h2 class="cta-title">Stop updating spreadsheets.<br>Start preventing churn.</h2>
+    <p class="cta-sub">Free 14-day trial. No credit card required. Health scores calculated in under 5 minutes.</p>
+    <div class="cta-buttons">
+      <a href="/index.html#cta" class="btn btn-primary btn-large">Start Free Trial</a>
+      <a href="/demo.html" class="btn btn-ghost btn-large">See a Demo</a>
+    </div>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-inner">
+    <span class="footer-brand">Monday Morning Playbook</span>
+    <ul class="footer-links">
+      <li><a href="/index.html#features">Features</a></li>
+      <li><a href="/index.html#roi">ROI Calculator</a></li>
+      <li><a href="/solutions/customer-health-score-template.html">Health Score Template</a></li>
+      <li><a href="/solutions/customer-churn-prevention.html">Churn Prevention</a></li>
+      <li><a href="#">Privacy</a></li>
+      <li><a href="#">Terms</a></li>
+    </ul>
+    <span class="footer-copy">&copy; 2026 Monday Morning Playbook</span>
+  </div>
+</footer>
+
+<script>
+  // Scroll-triggered animations
+  (function() {
+    var observer = new IntersectionObserver(function(entries) {
+      entries.forEach(function(entry) {
+        if (entry.isIntersecting) {
+          entry.target.style.animationPlayState = 'running';
+          observer.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.1 });
+
+    document.querySelectorAll('.anim-fade-up').forEach(function(el) {
+      el.style.animationPlayState = 'paused';
+      observer.observe(el);
+    });
+
+    // Re-enable hero animations immediately
+    document.querySelectorAll('.blog-hero .anim-fade-up').forEach(function(el) {
+      el.style.animationPlayState = 'running';
+    });
+  })();
+</script>
+
+</body>
+</html>

@@ -1,0 +1,676 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Customer Churn Prediction Software: What to Look For in 2026</title>
+  <meta name="description" content="Compare churn prediction approaches — from ML models to signal-based scoring. Learn what actually works for mid-market CS teams and how to evaluate tools." />
+  <link rel="canonical" href="https://mondaymorningplaybook.com/blog/churn-prediction-software-guide" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@0,400;0,500;0,700&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --ink:         #0a0a0f;
+      --ink-90:      #16161f;
+      --ink-80:      #1e1e2a;
+      --ink-70:      #2a2a3a;
+      --ink-60:      #3a3a4e;
+      --ink-40:      #6b6b82;
+      --ink-30:      #8e8ea3;
+      --ink-20:      #b0b0c0;
+      --ink-10:      #d4d4de;
+      --white:       #f5f5f7;
+      --accent:      #6366f1;
+      --accent-dim:  #4f46e5;
+      --accent-glow: rgba(99,102,241,.15);
+      --accent-glow2:rgba(99,102,241,.08);
+      --mint:        #34d399;
+      --mint-dim:    rgba(52,211,153,.12);
+      --coral:       #f87171;
+      --coral-dim:   rgba(248,113,113,.12);
+      --amber:       #fbbf24;
+      --amber-dim:   rgba(251,191,36,.12);
+      --radius:      10px;
+      --radius-lg:   16px;
+      --radius-xl:   24px;
+      --font-display:'Instrument Serif', Georgia, serif;
+      --font-body:   'DM Sans', -apple-system, sans-serif;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: var(--font-body);
+      background: var(--ink);
+      color: var(--ink-20);
+      font-size: 16px;
+      line-height: 1.65;
+      overflow-x: hidden;
+    }
+
+    /* ── NAV ── */
+    nav {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: rgba(10,10,15,.85);
+      backdrop-filter: blur(20px) saturate(180%);
+      -webkit-backdrop-filter: blur(20px) saturate(180%);
+      border-bottom: 1px solid rgba(255,255,255,.06);
+      padding: 0 32px;
+      height: 64px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .nav-left { display: flex; align-items: center; gap: 40px; }
+
+    .logo {
+      font-family: var(--font-display);
+      font-size: 22px;
+      color: var(--white);
+      text-decoration: none;
+      letter-spacing: -.3px;
+    }
+
+    .nav-links { display: flex; gap: 28px; list-style: none; }
+    .nav-links a {
+      font-size: 14px;
+      color: var(--ink-30);
+      text-decoration: none;
+      font-weight: 500;
+      transition: color .2s;
+    }
+    .nav-links a:hover { color: var(--white); }
+
+    .nav-right { display: flex; align-items: center; gap: 12px; }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-family: var(--font-body);
+      font-size: 14px;
+      font-weight: 600;
+      padding: 9px 22px;
+      border-radius: 8px;
+      border: 1px solid transparent;
+      cursor: pointer;
+      text-decoration: none;
+      transition: all .2s ease;
+    }
+
+    .btn-primary {
+      background: var(--accent);
+      color: var(--white);
+      border-color: var(--accent);
+      box-shadow: 0 0 20px var(--accent-glow), 0 2px 8px rgba(0,0,0,.3);
+    }
+    .btn-primary:hover {
+      background: var(--accent-dim);
+      transform: translateY(-1px);
+      box-shadow: 0 0 30px var(--accent-glow), 0 4px 12px rgba(0,0,0,.4);
+    }
+
+    .btn-ghost {
+      background: transparent;
+      color: var(--ink-20);
+      border-color: var(--ink-60);
+    }
+    .btn-ghost:hover {
+      color: var(--white);
+      border-color: var(--ink-30);
+      background: rgba(255,255,255,.04);
+    }
+
+    .btn-large {
+      padding: 14px 32px;
+      font-size: 16px;
+      border-radius: 10px;
+    }
+
+    /* ── BLOG LAYOUT ── */
+    .blog-hero {
+      position: relative;
+      padding: 60px 0 0;
+    }
+
+    .blog-hero-image {
+      width: 100%;
+      max-width: 720px;
+      margin: 0 auto 40px;
+      display: block;
+      border-radius: var(--radius-xl);
+      border: 1px solid var(--ink-70);
+      box-shadow: 0 20px 60px rgba(0,0,0,.5);
+    }
+
+    .blog-meta {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      margin-bottom: 20px;
+    }
+
+    .blog-category {
+      font-size: 12px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      color: var(--accent);
+      background: var(--accent-glow);
+      padding: 4px 12px;
+      border-radius: 20px;
+    }
+
+    .blog-date {
+      font-size: 14px;
+      color: var(--ink-40);
+    }
+
+    article {
+      max-width: 720px;
+      margin: 0 auto;
+      padding: 0 32px 100px;
+    }
+
+    article h1 {
+      font-family: var(--font-display);
+      font-size: 44px;
+      font-weight: 400;
+      color: var(--white);
+      line-height: 1.15;
+      margin-bottom: 24px;
+      letter-spacing: -.5px;
+    }
+
+    article h2 {
+      font-family: var(--font-display);
+      font-size: 32px;
+      font-weight: 400;
+      color: var(--white);
+      line-height: 1.2;
+      margin-top: 56px;
+      margin-bottom: 20px;
+      letter-spacing: -.3px;
+    }
+
+    article h3 {
+      font-family: var(--font-body);
+      font-size: 19px;
+      font-weight: 700;
+      color: var(--white);
+      margin-top: 36px;
+      margin-bottom: 12px;
+    }
+
+    article p {
+      font-size: 16px;
+      color: var(--ink-20);
+      line-height: 1.75;
+      margin-bottom: 20px;
+    }
+
+    article .lead {
+      font-size: 18px;
+      color: var(--ink-10);
+      line-height: 1.7;
+      margin-bottom: 28px;
+    }
+
+    article ul, article ol {
+      margin-bottom: 20px;
+      padding-left: 24px;
+    }
+
+    article li {
+      font-size: 16px;
+      color: var(--ink-20);
+      line-height: 1.75;
+      margin-bottom: 8px;
+    }
+
+    article strong {
+      color: var(--white);
+      font-weight: 600;
+    }
+
+    article a {
+      color: var(--accent);
+      text-decoration: underline;
+      text-decoration-color: rgba(99,102,241,.4);
+      text-underline-offset: 3px;
+      transition: text-decoration-color .2s;
+    }
+    article a:hover {
+      text-decoration-color: var(--accent);
+    }
+
+    /* ── INLINE CTA ── */
+    .inline-cta {
+      background: var(--ink-90);
+      border: 1px solid var(--ink-70);
+      border-left: 3px solid var(--accent);
+      border-radius: var(--radius-lg);
+      padding: 32px;
+      margin: 44px 0;
+    }
+
+    .inline-cta h4 {
+      font-family: var(--font-display);
+      font-size: 22px;
+      color: var(--white);
+      margin-bottom: 10px;
+    }
+
+    .inline-cta p {
+      font-size: 15px;
+      color: var(--ink-30);
+      margin-bottom: 18px;
+    }
+
+    .inline-cta .btn {
+      font-size: 14px;
+    }
+
+    /* ── COMPARISON BLOCK ── */
+    .approach-block {
+      background: var(--ink-90);
+      border: 1px solid var(--ink-70);
+      border-radius: var(--radius-lg);
+      padding: 28px;
+      margin-bottom: 20px;
+    }
+
+    .approach-block h4 {
+      font-size: 16px;
+      font-weight: 700;
+      color: var(--white);
+      margin-bottom: 12px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .approach-block .tag {
+      font-size: 11px;
+      font-weight: 600;
+      padding: 3px 10px;
+      border-radius: 20px;
+      text-transform: uppercase;
+      letter-spacing: .5px;
+    }
+
+    .tag-ml {
+      background: var(--amber-dim);
+      color: var(--amber);
+    }
+
+    .tag-signal {
+      background: var(--mint-dim);
+      color: var(--mint);
+    }
+
+    .approach-block ul {
+      padding-left: 20px;
+      margin-bottom: 0;
+    }
+
+    .approach-block li {
+      font-size: 14px;
+      color: var(--ink-30);
+      margin-bottom: 6px;
+    }
+
+    /* ── CHECKLIST ── */
+    .checklist {
+      list-style: none;
+      padding-left: 0;
+    }
+
+    .checklist li {
+      position: relative;
+      padding-left: 30px;
+      margin-bottom: 12px;
+    }
+
+    .checklist li::before {
+      content: '\2713';
+      position: absolute;
+      left: 0;
+      color: var(--mint);
+      font-weight: 700;
+    }
+
+    /* ── RELATED LINKS ── */
+    .related-links {
+      border-top: 1px solid var(--ink-70);
+      padding-top: 36px;
+      margin-top: 56px;
+    }
+
+    .related-links h3 {
+      font-size: 16px;
+      font-weight: 700;
+      color: var(--white);
+      margin-bottom: 16px;
+      margin-top: 0;
+    }
+
+    .related-links ul {
+      list-style: none;
+      padding-left: 0;
+    }
+
+    .related-links li {
+      margin-bottom: 10px;
+    }
+
+    .related-links a {
+      font-size: 15px;
+      color: var(--accent);
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      transition: color .2s;
+    }
+    .related-links a:hover { color: var(--white); }
+
+    .related-links a::before {
+      content: '\2192';
+      font-size: 14px;
+    }
+
+    /* ── FINAL CTA ── */
+    .final-cta {
+      text-align: center;
+      background: var(--ink-90);
+      border: 1px solid var(--ink-70);
+      border-radius: var(--radius-xl);
+      padding: 56px 40px;
+      margin-top: 56px;
+    }
+
+    .final-cta h3 {
+      font-family: var(--font-display);
+      font-size: 30px;
+      color: var(--white);
+      margin-bottom: 12px;
+      margin-top: 0;
+    }
+
+    .final-cta p {
+      font-size: 16px;
+      color: var(--ink-30);
+      margin-bottom: 24px;
+    }
+
+    .final-cta-buttons {
+      display: flex;
+      gap: 14px;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    .final-cta .note {
+      font-size: 13px;
+      color: var(--ink-40);
+      margin-top: 14px;
+      margin-bottom: 0;
+    }
+
+    /* ── FOOTER ── */
+    footer {
+      border-top: 1px solid var(--ink-70);
+      padding: 48px 32px;
+    }
+
+    .footer-inner {
+      max-width: 1140px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .footer-brand {
+      font-family: var(--font-display);
+      font-size: 18px;
+      color: var(--ink-20);
+    }
+
+    .footer-links {
+      display: flex;
+      gap: 24px;
+      list-style: none;
+    }
+
+    .footer-links a {
+      font-size: 13px;
+      color: var(--ink-40);
+      text-decoration: none;
+      transition: color .2s;
+    }
+    .footer-links a:hover { color: var(--white); }
+
+    .footer-copy {
+      font-size: 13px;
+      color: var(--ink-60);
+    }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 768px) {
+      article h1 { font-size: 32px; }
+      article h2 { font-size: 26px; }
+      .blog-hero { padding-top: 32px; }
+      .blog-hero-image { border-radius: var(--radius-lg); }
+      .nav-links { display: none; }
+      .inline-cta { padding: 24px; }
+      .final-cta { padding: 40px 24px; }
+      .final-cta h3 { font-size: 24px; }
+      .final-cta-buttons { flex-direction: column; align-items: center; }
+      .footer-inner { flex-direction: column; gap: 20px; text-align: center; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-left">
+    <a href="/index.html" class="logo">MMP</a>
+    <ul class="nav-links">
+      <li><a href="/index.html#features">Features</a></li>
+      <li><a href="/index.html#roi">ROI Calculator</a></li>
+      <li><a href="/solutions/churn-prediction-software.html">Churn Prediction</a></li>
+    </ul>
+  </div>
+  <div class="nav-right">
+    <a href="/demo.html" class="btn btn-ghost">See a Demo</a>
+    <a href="/index.html#cta" class="btn btn-primary">Start Free Trial</a>
+  </div>
+</nav>
+
+<!-- BLOG HERO -->
+<div class="blog-hero">
+  <img src="../images/blog-churn-prediction.png" alt="Customer churn prediction software comparison guide for CS leaders" class="blog-hero-image" />
+</div>
+
+<!-- ARTICLE -->
+<article>
+  <div class="blog-meta">
+    <span class="blog-category">Customer Success</span>
+    <span class="blog-date">February 26, 2026</span>
+  </div>
+
+  <h1>Customer Churn Prediction Software: A Buyer's Guide for CS Leaders</h1>
+
+  <p class="lead">Every CS leader has the same wish: see churn coming before it happens. The customer churn prediction software market has exploded with tools promising exactly that. But after evaluating dozens of platforms, most mid-market CS teams discover a frustrating truth: the tools that promise the most take the longest to deliver.</p>
+
+  <p>This guide breaks down the two dominant approaches to churn prediction, what actually matters when evaluating tools, and why a growing number of CS teams are moving away from black-box ML models toward signal-based approaches that deliver value from day one.</p>
+
+  <h2>Two Approaches to Churn Prediction</h2>
+
+  <p>Customer churn prediction software generally falls into one of two categories. Understanding the difference is the most important step in your evaluation.</p>
+
+  <div class="approach-block">
+    <h4>ML Model-Based Prediction <span class="tag tag-ml">Traditional</span></h4>
+    <p style="font-size:14px; color:var(--ink-30); margin-bottom:14px;">Tools like Gainsight, ChurnZero, and Totango use machine learning models trained on your historical data to generate a churn probability score for each account.</p>
+    <ul>
+      <li><strong>Pros:</strong> Can surface non-obvious correlations in large datasets; improves over time with more data</li>
+      <li><strong>Cons:</strong> Requires 6-12 months of historical data to train; high false positive rate until model matures; outputs a probability score, not an action plan; needs dedicated data team to maintain</li>
+      <li><strong>Best for:</strong> Enterprise teams with 1,000+ accounts, dedicated data science resources, and long implementation timelines</li>
+    </ul>
+  </div>
+
+  <div class="approach-block">
+    <h4>Signal-Based Scoring <span class="tag tag-signal">Modern</span></h4>
+    <p style="font-size:14px; color:var(--ink-30); margin-bottom:14px;">Tools like Monday Morning Playbook aggregate concrete behavioral signals — usage drops, missed contacts, sentiment shifts, renewal timelines — into a prioritized risk list without requiring historical training data.</p>
+    <ul>
+      <li><strong>Pros:</strong> Works immediately with existing tools; low false positive rate because signals are concrete and verifiable; outputs a prioritized action list, not a score; no data team required</li>
+      <li><strong>Cons:</strong> Won't surface non-obvious statistical patterns; relies on integration quality</li>
+      <li><strong>Best for:</strong> Mid-market teams (50-500 accounts) that need results this week, not next quarter</li>
+    </ul>
+  </div>
+
+  <p>The key difference: ML-based tools try to tell you <em>how likely</em> an account is to churn. Signal-based tools tell you <em>which accounts need attention right now and why</em>. For most CS teams, the second question is far more useful.</p>
+
+  <h2>What to Look For in Customer Churn Prediction Software</h2>
+
+  <p>Regardless of which approach you lean toward, these five criteria should drive your evaluation.</p>
+
+  <h3>1. Data Requirements</h3>
+
+  <p>This is the single biggest differentiator between tools. Ask every vendor: what data do you need from us before the tool works?</p>
+
+  <p>ML-based tools typically need a minimum of 6 months of historical customer data — usage metrics, support tickets, renewal outcomes — before the model can generate reliable predictions. If you're a growing mid-market company, you may not have clean historical data to feed the model. And even if you do, getting it into the tool requires engineering work, data pipelines, and ongoing maintenance.</p>
+
+  <p>Signal-based tools connect directly to your existing stack via OAuth integrations. If you're already using Salesforce, Gong, Looker, and Slack, the tool can start reading signals from those systems on day one. No data migration. No CSV uploads. No engineering tickets.</p>
+
+  <h3>2. Signal Quality vs. Model Complexity</h3>
+
+  <p>More complex doesn't mean more useful. A model that tells you "Acme Corp has a 73% probability of churning" sounds impressive, but it doesn't tell your CSM <em>what to do</em>. They still need to dig into the account to figure out what's wrong.</p>
+
+  <p>Compare that to a signal-based alert: "Acme Corp: product usage dropped 38% over 2 weeks, last Gong call had negative sentiment, renewal in 45 days." That's context your CSM can act on immediately — no investigation required.</p>
+
+  <p>When evaluating customer churn prediction software, ask: does this tool give my CSMs a number or a next step?</p>
+
+  <h3>3. Actionability</h3>
+
+  <p>The entire point of predicting churn is to prevent it. So the tool's output needs to be actionable, not just informative.</p>
+
+  <p>Look for tools that provide:</p>
+  <ul>
+    <li><strong>Prioritized account lists</strong> — ranked by urgency, not just probability</li>
+    <li><strong>Specific signal context</strong> — what triggered the risk flag</li>
+    <li><strong>Recommended actions</strong> — suggested next steps for the CSM</li>
+    <li><strong>Cadence-based delivery</strong> — information pushed to your team at the right time, not sitting in a dashboard they need to remember to check</li>
+  </ul>
+
+  <p>A weekly briefing that says "here are the 6 accounts that need attention this week, ranked by urgency, with context for each" is more valuable than a real-time probability score updating on a dashboard nobody opens.</p>
+
+  <h3>4. Integration with Your Existing Stack</h3>
+
+  <p>The best customer churn prediction software doesn't create another silo — it consolidates the ones you already have. Your evaluation checklist should include:</p>
+
+  <ul class="checklist">
+    <li>CRM integration (Salesforce, HubSpot) for account and renewal data</li>
+    <li>Product analytics (Looker, Amplitude, Mixpanel) for usage signals</li>
+    <li>Conversation intelligence (Gong, Chorus) for sentiment data</li>
+    <li>Communication tools (Slack, email) for delivery and alerts</li>
+    <li>Project tracking (Linear, Jira) for open ticket and bug context</li>
+  </ul>
+
+  <p>The setup method matters too. OAuth-based integrations that your CS leader can configure are fundamentally different from API-based integrations that require your engineering team to build and maintain. One takes 5 minutes. The other takes 5 sprints.</p>
+
+  <h3>5. Time to Value</h3>
+
+  <p>This is where most evaluations fall apart. The vendor demos beautifully — but then you learn the implementation takes 3-6 months, requires a dedicated project manager, and doesn't actually produce usable predictions until the model has enough training data.</p>
+
+  <p>Ask the hard questions upfront:</p>
+  <ul>
+    <li>How long before my team sees their first usable output?</li>
+    <li>What does onboarding look like? Who's involved from our side?</li>
+    <li>Do we need engineering resources for setup or ongoing maintenance?</li>
+    <li>When can we expect the tool to be part of our weekly workflow?</li>
+  </ul>
+
+  <p>If the answer to "when does this work?" is anything other than "this week," factor that delay into your total cost.</p>
+
+  <div class="inline-cta">
+    <h4>See MMP's Signal-Based Approach in Action</h4>
+    <p>Monday Morning Playbook connects to your existing tools and delivers a prioritized risk briefing every Monday. Setup takes under 5 minutes. No training data required.</p>
+    <a href="/demo.html" class="btn btn-primary">See a Demo</a>
+  </div>
+
+  <h2>Why Signal-Based Prediction Wins for Mid-Market Teams</h2>
+
+  <p>If you're running CS at a company with 50-500 accounts, the math on ML-based churn prediction doesn't work in your favor. Here's why.</p>
+
+  <p><strong>Your data set is too small for ML.</strong> Machine learning models need volume to be accurate. With 150 accounts and maybe 10-15 churns per year, the model doesn't have enough signal to distinguish meaningful patterns from noise. Enterprise companies with 5,000+ accounts have a different equation — but mid-market teams will spend months training a model that never reaches useful accuracy.</p>
+
+  <p><strong>You need actions, not probabilities.</strong> A VP of CS managing a team of 8 CSMs doesn't need a dashboard of probability scores. They need a weekly list that says: these are the accounts that need outreach, in this order, for these reasons. The output of your churn prediction tool should be a Monday morning game plan, not a data science exercise.</p>
+
+  <p><strong>A weekly cadence beats real-time noise.</strong> Real-time alerts sound great in theory. In practice, they create notification fatigue. A CSM who gets pinged every time a usage metric dips will start ignoring alerts within a month. A weekly briefing — timed to the start of the work week, prioritized and contextualized — becomes a ritual your team actually follows.</p>
+
+  <p><strong>Your team has to trust it.</strong> Adoption is the invisible killer of CS tools. If your CSMs don't trust the tool's output, they won't use it. Signal-based scoring is inherently more transparent: the tool says "usage dropped 40% and the renewal is in 30 days" — your CSM can verify that instantly. A model that says "73% churn probability" with no explanation gets ignored.</p>
+
+  <h2>Getting Started: A Framework for Evaluating Churn Prediction Tools</h2>
+
+  <p>Before you schedule demos, align your team on these questions. They'll cut your evaluation time in half.</p>
+
+  <p><strong>Define your real problem.</strong> Is it that you can't see risk early enough? That your team doesn't know which accounts to prioritize? That your data is scattered across too many tools? Each problem points to a different solution. If your primary pain is data fragmentation and prioritization — not statistical modeling — a signal-based tool will deliver faster value.</p>
+
+  <p><strong>Inventory your current stack.</strong> List every tool your team uses to assess account health: CRM, analytics, conversation intelligence, support, project management. The ideal customer churn prediction software connects to all of them without requiring data exports or engineering resources.</p>
+
+  <p><strong>Set a time-to-value requirement.</strong> Be specific: "We need our team using this tool in their Monday workflow within 2 weeks of purchase." Any vendor that can't meet that bar should explain exactly why — and what the implementation timeline looks like.</p>
+
+  <p><strong>Test with real accounts.</strong> During evaluation, ask the vendor to run a pilot against your actual account data. If the tool surfaces risk signals you already know about — plus a few you didn't — that's a strong signal it works. If it takes weeks to configure before it can show you anything, that's a signal too.</p>
+
+  <p><strong>Measure adoption, not just accuracy.</strong> The best churn prediction software is the one your team actually uses. After a 2-week pilot, ask your CSMs: did this change how you prioritized your week? If the answer is yes, you have your tool.</p>
+
+  <!-- FINAL CTA -->
+  <div class="final-cta">
+    <h3>Ready to See What Signal-Based Churn Prediction Looks Like?</h3>
+    <p>Monday Morning Playbook gives your CS team a prioritized weekly briefing with risk signals from Salesforce, Gong, Looker, and more. Setup takes 5 minutes.</p>
+    <div class="final-cta-buttons">
+      <a href="/index.html#cta" class="btn btn-primary btn-large">Start Free Trial</a>
+      <a href="/demo.html" class="btn btn-ghost btn-large">See a Demo</a>
+    </div>
+    <p class="note">Free 14-day trial &middot; No credit card required &middot; SOC 2 compliant</p>
+  </div>
+
+  <!-- RELATED LINKS -->
+  <div class="related-links">
+    <h3>Related Reading</h3>
+    <ul>
+      <li><a href="/solutions/churn-prediction-software.html">Customer Churn Prediction Software &mdash; Product Overview</a></li>
+      <li><a href="/solutions/customer-churn-prevention.html">Customer Churn Prevention Solutions</a></li>
+      <li><a href="/blog/customer-churn-prevention-guide.html">Customer Churn Prevention: A Complete Guide for CS Teams</a></li>
+    </ul>
+  </div>
+
+</article>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-inner">
+    <span class="footer-brand">Monday Morning Playbook</span>
+    <ul class="footer-links">
+      <li><a href="/index.html#features">Features</a></li>
+      <li><a href="/index.html#roi">ROI Calculator</a></li>
+      <li><a href="/solutions/churn-prediction-software.html">Churn Prediction</a></li>
+      <li><a href="#">Privacy</a></li>
+      <li><a href="#">Terms</a></li>
+    </ul>
+    <span class="footer-copy">&copy; 2026 Monday Morning Playbook</span>
+  </div>
+</footer>
+
+</body>
+</html>

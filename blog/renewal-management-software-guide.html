@@ -1,0 +1,641 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Renewal Management Software: How to Choose the Right Tool in 2026</title>
+  <meta name="description" content="Stop tracking renewals in spreadsheets. Learn what to look for in renewal management software and how to build a renewal process your CS team will follow." />
+  <link rel="canonical" href="https://mondaymorningplaybook.com/blog/renewal-management-software-guide.html" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@0,400;0,500;0,700&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --ink:         #0a0a0f;
+      --ink-90:      #16161f;
+      --ink-80:      #1e1e2a;
+      --ink-70:      #2a2a3a;
+      --ink-60:      #3a3a4e;
+      --ink-40:      #6b6b82;
+      --ink-30:      #8e8ea3;
+      --ink-20:      #b0b0c0;
+      --ink-10:      #d4d4de;
+      --white:       #f5f5f7;
+      --accent:      #6366f1;
+      --accent-dim:  #4f46e5;
+      --accent-glow: rgba(99,102,241,.15);
+      --accent-glow2:rgba(99,102,241,.08);
+      --mint:        #34d399;
+      --mint-dim:    rgba(52,211,153,.12);
+      --coral:       #f87171;
+      --coral-dim:   rgba(248,113,113,.12);
+      --amber:       #fbbf24;
+      --amber-dim:   rgba(251,191,36,.12);
+      --radius:      10px;
+      --radius-lg:   16px;
+      --radius-xl:   24px;
+      --font-display:'Instrument Serif', Georgia, serif;
+      --font-body:   'DM Sans', -apple-system, sans-serif;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: var(--font-body);
+      background: var(--ink);
+      color: var(--ink-20);
+      font-size: 16px;
+      line-height: 1.65;
+      overflow-x: hidden;
+    }
+
+    /* ── ANIMATIONS ── */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(30px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to   { opacity: 1; }
+    }
+    @keyframes pulse {
+      0%, 100% { opacity: .6; }
+      50% { opacity: 1; }
+    }
+
+    .anim-fade-up {
+      opacity: 0;
+      animation: fadeUp .7s ease-out forwards;
+    }
+    .anim-d1 { animation-delay: .1s; }
+    .anim-d2 { animation-delay: .2s; }
+    .anim-d3 { animation-delay: .3s; }
+
+    /* ── NAV ── */
+    nav {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: rgba(10,10,15,.85);
+      backdrop-filter: blur(20px) saturate(180%);
+      -webkit-backdrop-filter: blur(20px) saturate(180%);
+      border-bottom: 1px solid rgba(255,255,255,.06);
+      padding: 0 32px;
+      height: 64px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .nav-left { display: flex; align-items: center; gap: 40px; }
+
+    .logo {
+      font-family: var(--font-display);
+      font-size: 22px;
+      color: var(--white);
+      text-decoration: none;
+      letter-spacing: -.3px;
+    }
+
+    .nav-links { display: flex; gap: 28px; list-style: none; }
+    .nav-links a {
+      font-size: 14px;
+      color: var(--ink-30);
+      text-decoration: none;
+      font-weight: 500;
+      transition: color .2s;
+    }
+    .nav-links a:hover { color: var(--white); }
+
+    .nav-right { display: flex; align-items: center; gap: 12px; }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-family: var(--font-body);
+      font-size: 14px;
+      font-weight: 600;
+      padding: 9px 22px;
+      border-radius: 8px;
+      border: 1px solid transparent;
+      cursor: pointer;
+      text-decoration: none;
+      transition: all .2s ease;
+    }
+
+    .btn-primary {
+      background: var(--accent);
+      color: var(--white);
+      border-color: var(--accent);
+      box-shadow: 0 0 20px var(--accent-glow), 0 2px 8px rgba(0,0,0,.3);
+    }
+    .btn-primary:hover {
+      background: var(--accent-dim);
+      transform: translateY(-1px);
+      box-shadow: 0 0 30px var(--accent-glow), 0 4px 12px rgba(0,0,0,.4);
+    }
+
+    .btn-ghost {
+      background: transparent;
+      color: var(--ink-20);
+      border-color: var(--ink-60);
+    }
+    .btn-ghost:hover {
+      color: var(--white);
+      border-color: var(--ink-30);
+      background: rgba(255,255,255,.04);
+    }
+
+    .btn-large {
+      padding: 14px 32px;
+      font-size: 16px;
+      border-radius: 10px;
+    }
+
+    /* ── BLOG LAYOUT ── */
+    .blog-hero {
+      position: relative;
+      overflow: hidden;
+      padding: 80px 0 0;
+    }
+
+    .blog-hero::before {
+      content: '';
+      position: absolute;
+      top: -200px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 900px;
+      height: 900px;
+      background: radial-gradient(circle, var(--accent-glow) 0%, transparent 70%);
+      pointer-events: none;
+    }
+
+    .blog-hero-inner {
+      max-width: 720px;
+      margin: 0 auto;
+      padding: 0 32px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .blog-meta {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      margin-bottom: 24px;
+    }
+
+    .blog-category {
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      color: var(--accent);
+      font-weight: 700;
+    }
+
+    .blog-date {
+      font-size: 13px;
+      color: var(--ink-40);
+    }
+
+    .blog-title {
+      font-family: var(--font-display);
+      font-size: 48px;
+      font-weight: 400;
+      color: var(--white);
+      line-height: 1.1;
+      margin-bottom: 24px;
+      letter-spacing: -.5px;
+    }
+
+    .blog-subtitle {
+      font-size: 19px;
+      color: var(--ink-30);
+      line-height: 1.6;
+      margin-bottom: 48px;
+    }
+
+    .blog-hero-image {
+      max-width: 720px;
+      margin: 0 auto;
+      border-radius: var(--radius-xl) var(--radius-xl) 0 0;
+      overflow: hidden;
+      border: 1px solid var(--ink-70);
+      border-bottom: none;
+    }
+
+    .blog-hero-image img {
+      width: 100%;
+      height: auto;
+      display: block;
+    }
+
+    /* ── ARTICLE BODY ── */
+    .article {
+      max-width: 720px;
+      margin: 0 auto;
+      padding: 64px 32px 100px;
+    }
+
+    .article h2 {
+      font-family: var(--font-display);
+      font-size: 32px;
+      font-weight: 400;
+      color: var(--white);
+      line-height: 1.2;
+      margin-top: 56px;
+      margin-bottom: 20px;
+      letter-spacing: -.3px;
+    }
+
+    .article h3 {
+      font-family: var(--font-display);
+      font-size: 22px;
+      font-weight: 400;
+      color: var(--white);
+      margin-top: 40px;
+      margin-bottom: 12px;
+    }
+
+    .article p {
+      font-size: 16px;
+      color: var(--ink-20);
+      line-height: 1.75;
+      margin-bottom: 20px;
+    }
+
+    .article ul, .article ol {
+      margin-bottom: 20px;
+      padding-left: 24px;
+    }
+
+    .article li {
+      font-size: 16px;
+      color: var(--ink-20);
+      line-height: 1.75;
+      margin-bottom: 8px;
+    }
+
+    .article li strong {
+      color: var(--ink-10);
+    }
+
+    .article strong {
+      color: var(--ink-10);
+      font-weight: 600;
+    }
+
+    .article a {
+      color: var(--accent);
+      text-decoration: underline;
+      text-underline-offset: 3px;
+      transition: color .2s;
+    }
+    .article a:hover { color: var(--white); }
+
+    .article blockquote {
+      border-left: 3px solid var(--accent);
+      padding: 16px 24px;
+      margin: 32px 0;
+      background: var(--accent-glow2);
+      border-radius: 0 var(--radius) var(--radius) 0;
+    }
+
+    .article blockquote p {
+      color: var(--ink-10);
+      font-style: italic;
+      margin-bottom: 0;
+    }
+
+    /* ── INLINE CTA CALLOUT ── */
+    .inline-cta {
+      background: linear-gradient(135deg, rgba(99,102,241,.08), rgba(52,211,153,.06));
+      border: 1px solid rgba(99,102,241,.2);
+      border-radius: var(--radius-lg);
+      padding: 36px;
+      margin: 48px 0;
+      text-align: center;
+    }
+
+    .inline-cta-title {
+      font-family: var(--font-display);
+      font-size: 24px;
+      color: var(--white);
+      margin-bottom: 12px;
+    }
+
+    .inline-cta-desc {
+      font-size: 15px;
+      color: var(--ink-30);
+      margin-bottom: 20px;
+      line-height: 1.6;
+    }
+
+    .inline-cta .btn {
+      margin: 0 6px;
+    }
+
+    /* ── SECTION DIVIDER ── */
+    .section-divider {
+      border: none;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, var(--ink-60), transparent);
+      margin: 0;
+      max-width: 720px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    /* ── FINAL CTA ── */
+    .cta-section {
+      text-align: center;
+      position: relative;
+      padding: 100px 0;
+      overflow: hidden;
+    }
+
+    .cta-section::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(ellipse at center, var(--accent-glow) 0%, transparent 60%);
+      pointer-events: none;
+    }
+
+    .cta-title {
+      font-family: var(--font-display);
+      font-size: 42px;
+      color: var(--white);
+      margin-bottom: 16px;
+      position: relative;
+    }
+
+    .cta-sub {
+      font-size: 17px;
+      color: var(--ink-30);
+      max-width: 480px;
+      margin: 0 auto 36px;
+      position: relative;
+      line-height: 1.6;
+    }
+
+    .cta-buttons {
+      display: flex;
+      gap: 14px;
+      justify-content: center;
+      position: relative;
+    }
+
+    .cta-links {
+      margin-top: 24px;
+      position: relative;
+    }
+
+    .cta-links a {
+      font-size: 14px;
+      color: var(--ink-30);
+      text-decoration: underline;
+      text-underline-offset: 3px;
+      margin: 0 12px;
+      transition: color .2s;
+    }
+    .cta-links a:hover { color: var(--white); }
+
+    /* ── FOOTER ── */
+    footer {
+      border-top: 1px solid var(--ink-70);
+      padding: 48px 32px;
+    }
+
+    .footer-inner {
+      max-width: 1140px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .footer-brand {
+      font-family: var(--font-display);
+      font-size: 18px;
+      color: var(--ink-20);
+    }
+
+    .footer-links {
+      display: flex;
+      gap: 24px;
+      list-style: none;
+    }
+
+    .footer-links a {
+      font-size: 13px;
+      color: var(--ink-40);
+      text-decoration: none;
+      transition: color .2s;
+    }
+    .footer-links a:hover { color: var(--white); }
+
+    .footer-copy {
+      font-size: 13px;
+      color: var(--ink-60);
+    }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 768px) {
+      .blog-title { font-size: 32px; }
+      .blog-subtitle { font-size: 17px; }
+      .article h2 { font-size: 26px; }
+      .article h3 { font-size: 20px; }
+      .nav-links { display: none; }
+      .footer-inner { flex-direction: column; gap: 20px; text-align: center; }
+      .cta-buttons { flex-direction: column; align-items: center; }
+      .cta-title { font-size: 30px; }
+      nav { padding: 0 20px; }
+      .blog-hero-inner { padding: 0 20px; }
+      .article { padding: 48px 20px 72px; }
+      .inline-cta { padding: 28px 20px; }
+      .inline-cta .btn { display: block; margin: 8px auto; width: fit-content; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-left">
+    <a href="/index.html" class="logo">Monday Morning Playbook</a>
+    <ul class="nav-links">
+      <li><a href="/index.html#features">Features</a></li>
+      <li><a href="/index.html#roi">ROI Calculator</a></li>
+      <li><a href="/solutions/renewal-management-software.html">Renewal Management</a></li>
+    </ul>
+  </div>
+  <div class="nav-right">
+    <a href="/demo.html" class="btn btn-ghost">See a Demo</a>
+    <a href="/index.html#cta" class="btn btn-primary">Start Free Trial</a>
+  </div>
+</nav>
+
+<!-- BLOG HERO -->
+<section class="blog-hero">
+  <div class="blog-hero-inner">
+    <div class="blog-meta anim-fade-up">
+      <span class="blog-category">Customer Success</span>
+      <span class="blog-date">February 26, 2026</span>
+    </div>
+    <h1 class="blog-title anim-fade-up anim-d1">Renewal Management Software: The Complete Guide for CS Teams</h1>
+    <p class="blog-subtitle anim-fade-up anim-d2">What to look for, what to avoid, and how to build a renewal process your team will actually follow -- every single week.</p>
+  </div>
+  <div class="blog-hero-image anim-fade-up anim-d3">
+    <img src="../images/blog-renewal-management.png" alt="Renewal management software dashboard showing renewal timelines and account health" />
+  </div>
+</section>
+
+<!-- ARTICLE -->
+<article class="article">
+
+  <p><strong>If your renewal process lives in a spreadsheet, you're already behind.</strong></p>
+
+  <p>You know the drill. A CSM opens the renewal tracker on Monday morning, scrolls through 40 rows of dates and dollar amounts, and tries to figure out which accounts need attention this week. Maybe they cross-reference Salesforce. Maybe they check Slack for recent complaints. Maybe they just go on gut feel.</p>
+
+  <p>Meanwhile, a $180K account that renews in 45 days has been quietly disengaging for three months -- and nobody noticed because the spreadsheet doesn't track product usage, support tickets, or executive sentiment. It just tracks dates.</p>
+
+  <p>This is the renewal management problem. Not a lack of data. A lack of signal. And it's why a growing number of CS teams are moving to dedicated renewal management software -- tools that connect the dots between renewal timelines, account health, and team action.</p>
+
+  <p>This guide breaks down what renewal management software should do, how to evaluate the options, and how to build a weekly renewal process that actually works.</p>
+
+  <h2>Why Spreadsheet-Based Renewal Tracking Fails</h2>
+
+  <p>Spreadsheets aren't the enemy. They're a reasonable starting point. But they fail in predictable ways once your team manages more than 50 accounts, and understanding those failure modes helps clarify what you need from a real tool.</p>
+
+  <p><strong>No automated alerts.</strong> A spreadsheet can't ping you when a renewal is 90 days out. It can't escalate when an account's health score drops. Someone has to remember to look -- and "remembering to look" is not a scalable process.</p>
+
+  <p><strong>No account health context.</strong> The renewal date tells you when an account is up for renewal. It tells you nothing about whether they're likely to renew. You need product usage trends, support ticket volume, NPS responses, champion activity, and executive engagement -- all in one place, attached to the renewal record.</p>
+
+  <p><strong>No accountability trail.</strong> Who owns each renewal? When was the last touchpoint? What was the outcome of the QBR? In a spreadsheet, this information lives in someone's head or scattered across five different tools. When a CSM leaves, so does the context.</p>
+
+  <p><strong>Human error is inevitable.</strong> Dates get transposed. Rows get deleted. Filters hide critical accounts. The spreadsheet becomes a liability instead of a tool -- and the team loses trust in the data.</p>
+
+  <blockquote>
+    <p>"I don't need another platform to configure. I need something that tells my team what's on fire, what's growing, and what to do first -- every Monday morning, without any setup."</p>
+  </blockquote>
+
+  <h2>What Renewal Management Software Should Do</h2>
+
+  <p>Not every tool labeled "renewal management" actually solves the problem. Some are glorified calendars. Others are full CS platforms that require months of configuration before you see any value. Here's what the right software renewal management solution should deliver out of the box.</p>
+
+  <h3>Surface renewals 90, 60, and 30 days out</h3>
+
+  <p>Your team needs a rolling timeline of upcoming renewals, segmented by urgency. Ninety days out is when you start the conversation. Sixty days is when you need a decision timeline. Thirty days is when you're in execution mode. The software should surface these automatically, with no manual date entry required after the initial CRM sync.</p>
+
+  <h3>Attach health signals to every renewal</h3>
+
+  <p>A renewal date without a health score is just a calendar entry. The tool should pull in product usage data, support ticket trends, NPS or CSAT scores, login frequency, feature adoption rates, and executive engagement signals. Then it should synthesize these into a single health indicator -- so your team can immediately see whether a renewal is on track, at risk, or primed for expansion.</p>
+
+  <h3>Prioritize by risk and revenue</h3>
+
+  <p>Not all renewals deserve equal attention. A $200K account with declining usage is more urgent than a $20K account that's healthy. The software should rank renewals by a combination of risk score and contract value, giving your team a clear priority queue. No more guessing what to work on first.</p>
+
+  <h3>Integrate with your CRM and product stack</h3>
+
+  <p>Renewal management software that requires CSV imports or manual data entry defeats the purpose. Look for native integrations with Salesforce (or HubSpot), your product analytics platform, your support tool, and your communication channels. OAuth-based connections that sync automatically are the standard -- anything less creates more work than it eliminates.</p>
+
+  <h3>Fit into a weekly workflow</h3>
+
+  <p>This is the most overlooked requirement. A tool can have perfect data and beautiful dashboards, but if your team doesn't actually use it consistently, it's just expensive shelfware. The best renewal management software is opinionated about workflow. It tells your team what to look at, when, and what action to take. A weekly renewal briefing -- delivered every Monday morning, covering the next 90 days -- is more effective than a real-time dashboard that nobody opens.</p>
+
+  <!-- INLINE CTA -->
+  <div class="inline-cta">
+    <h3 class="inline-cta-title">Monday Morning Playbook does exactly this.</h3>
+    <p class="inline-cta-desc">A weekly renewal briefing with health signals, prioritized actions, and expansion opportunities -- live in an afternoon, no configuration required.</p>
+    <a href="/index.html#cta" class="btn btn-primary">Start Free Trial</a>
+    <a href="/demo.html" class="btn btn-ghost">See a Demo</a>
+  </div>
+
+  <h2>The Weekly Renewal Review: Building a Monday Morning Cadence</h2>
+
+  <p>The most effective CS teams don't treat renewal management as an ad hoc activity. They build a weekly cadence around it. Here's what that looks like in practice.</p>
+
+  <p><strong>Monday morning, 9:00 AM.</strong> The team opens their renewal briefing. It shows every renewal coming up in the next 90 days, ranked by urgency. Red accounts are at the top. Green accounts with expansion signals are flagged. Each renewal has a health score, last touchpoint date, and a recommended action.</p>
+
+  <p><strong>Monday morning, 9:15 AM.</strong> The VP of CS runs a 15-minute standup. The team walks through the top 5 accounts. They assign owners to at-risk renewals. They flag accounts that need executive engagement. They identify expansion conversations to start this week.</p>
+
+  <p><strong>Monday morning, 9:30 AM.</strong> Every CSM knows exactly what to do this week. No spreadsheet digging. No Salesforce report building. No guessing. They open their priority queue and start working.</p>
+
+  <p>This cadence works because it's structured, repeatable, and data-driven. The renewal management software does the data assembly. The team does the relationship work. That's the split that actually drives retention.</p>
+
+  <p>The alternative -- CSMs assembling their own renewal data from five different tools every Monday -- is a tax on your team's most productive hours. At a mid-market CS team with 8 CSMs, that's roughly 8 hours of data assembly time per week. Over a year, that's 400+ hours spent pulling data instead of talking to customers.</p>
+
+  <h2>Evaluating Renewal Management Software: What to Look For</h2>
+
+  <p>When you're comparing tools, these are the dimensions that matter most for a mid-market CS team.</p>
+
+  <p><strong>Time to value.</strong> How quickly can your team start using the tool? If the answer is "3-6 months after implementation," the tool is designed for enterprise teams with dedicated CS Ops resources. For mid-market teams, look for solutions that deliver value in the first week -- not the first quarter.</p>
+
+  <p><strong>Integration depth.</strong> Does the tool connect to your actual stack? Salesforce, your product analytics, your support platform, Slack? And are these real integrations with bi-directional sync, or one-time imports that require manual refreshes?</p>
+
+  <p><strong>Workflow opinion.</strong> Is the tool a blank canvas that requires months of configuration, or does it come with a built-in workflow? Blank-canvas tools (like Gainsight) are powerful for large teams with CS Ops support. But if you want something your team uses in week one, you need an opinionated tool that prescribes a cadence.</p>
+
+  <p><strong>Health scoring methodology.</strong> How does the tool calculate account health? Is it a black box, or can you see the signals that feed into the score? The best tools are transparent: they show you product usage, support trends, engagement frequency, and NPS data -- and let you see exactly why an account is flagged as at-risk.</p>
+
+  <p><strong>Pricing transparency.</strong> If you have to "talk to sales" to learn the price, budget for sticker shock. Transparent, per-seat pricing is a signal that the vendor is building for mid-market teams, not just enterprise logos.</p>
+
+  <p><strong>Adoption indicators.</strong> Ask for customer retention data on the tool itself. What percentage of CSMs log in weekly? What's the average time-to-first-value? A tool that teams don't adopt is worse than a spreadsheet -- at least the spreadsheet was free.</p>
+
+  <h3>Questions to ask during a demo</h3>
+
+  <ul>
+    <li><strong>How long until my team sees their first renewal briefing?</strong> The answer should be measured in hours, not weeks.</li>
+    <li><strong>What data sources feed into your health score?</strong> Look for product usage, support tickets, NPS, login frequency, and CRM activity -- not just self-reported CSM sentiment.</li>
+    <li><strong>Can you show me what a CSM sees on Monday morning?</strong> This is the most revealing question. If the answer is "a dashboard with 20 widgets," run. If the answer is "a prioritized list of renewals with recommended actions," you're on the right track.</li>
+    <li><strong>What happens when a CSM leaves?</strong> All context should live in the tool, not in someone's head. Look for activity logs, touchpoint history, and seamless account reassignment.</li>
+    <li><strong>What does pricing look like at 2x our current team size?</strong> Growth shouldn't break your budget. Transparent per-seat pricing should scale linearly.</li>
+  </ul>
+
+  <h2>The Bottom Line</h2>
+
+  <p>Renewal management software isn't about replacing spreadsheets for the sake of it. It's about giving your CS team a structured, signal-driven process for the highest-stakes activity in customer success: keeping and growing your existing revenue.</p>
+
+  <p>The right tool surfaces renewals early, attaches health signals to each one, prioritizes by risk and revenue, and fits into a weekly cadence your team actually follows. It should be live in an afternoon, not after a quarter of configuration.</p>
+
+  <p>If you're spending your Monday mornings assembling data instead of acting on it, your renewal process has room to improve. The question is whether you keep patching the spreadsheet -- or invest in software that does the data assembly for you, so your team can focus on what they do best: building relationships that drive retention and expansion.</p>
+
+</article>
+
+<!-- FINAL CTA -->
+<section class="cta-section">
+  <div style="max-width:720px;margin:0 auto;padding:0 32px;">
+    <h2 class="cta-title">Ready to fix your renewal process?</h2>
+    <p class="cta-sub">Monday Morning Playbook gives your CS team a weekly renewal briefing with health signals, prioritized actions, and expansion opportunities. Live in an afternoon.</p>
+    <div class="cta-buttons">
+      <a href="/index.html#cta" class="btn btn-primary btn-large">Start Free Trial</a>
+      <a href="/demo.html" class="btn btn-ghost btn-large">See a Demo</a>
+    </div>
+    <div class="cta-links">
+      <a href="/solutions/renewal-management-software.html">Renewal Management Software</a>
+      <a href="/index.html#features">All Features</a>
+      <a href="/index.html#roi">ROI Calculator</a>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-inner">
+    <span class="footer-brand">Monday Morning Playbook</span>
+    <ul class="footer-links">
+      <li><a href="/index.html#features">Features</a></li>
+      <li><a href="/index.html#roi">ROI Calculator</a></li>
+      <li><a href="/solutions/renewal-management-software.html">Renewal Management</a></li>
+      <li><a href="/demo.html">Demo</a></li>
+    </ul>
+    <span class="footer-copy">&copy; 2026 Monday Morning Playbook</span>
+  </div>
+</footer>
+
+</body>
+</html>
