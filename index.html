@@ -119,6 +119,62 @@
     }
     .nav-links a:hover { color: var(--white); }
 
+    /* ── NAV DROPDOWN ── */
+    .nav-dropdown { position: relative; padding-bottom: 12px; margin-bottom: -12px; }
+    .nav-dropdown > a { cursor: pointer; }
+    .nav-dropdown > a::after {
+      content: '';
+      display: inline-block;
+      width: 4px; height: 4px;
+      border-right: 1.5px solid currentColor;
+      border-bottom: 1.5px solid currentColor;
+      transform: rotate(45deg);
+      margin-left: 5px;
+      margin-bottom: 2px;
+      transition: transform .2s;
+    }
+    .nav-dropdown:hover > a::after { transform: rotate(-135deg); }
+    .dropdown-menu {
+      position: absolute;
+      top: 100%;
+      left: 50%;
+      transform: translateX(-50%);
+      min-width: 260px;
+      background: var(--ink-90);
+      border: 1px solid var(--ink-70);
+      border-radius: var(--radius);
+      padding: 8px;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity .15s, transform .15s;
+      transform: translateX(-50%) translateY(4px);
+      box-shadow: 0 12px 32px rgba(0,0,0,.4);
+    }
+    .nav-dropdown:hover .dropdown-menu {
+      opacity: 1;
+      pointer-events: auto;
+      transform: translateX(-50%) translateY(0);
+    }
+    .dropdown-menu a {
+      display: block;
+      padding: 10px 14px;
+      font-size: 13px !important;
+      color: var(--ink-20) !important;
+      border-radius: 6px;
+      transition: background .15s, color .15s;
+      line-height: 1.4;
+    }
+    .dropdown-menu a:hover {
+      background: var(--ink-80);
+      color: var(--white) !important;
+    }
+    .dropdown-menu .dropdown-desc {
+      display: block;
+      font-size: 12px;
+      color: var(--ink-40);
+      margin-top: 2px;
+    }
+
     .nav-right { display: flex; align-items: center; gap: 12px; }
 
     .btn {
@@ -999,7 +1055,15 @@
     <ul class="nav-links">
       <li><a href="#how-it-works">How It Works</a></li>
       <li><a href="#features">Features</a></li>
-      <li><a href="#proof">Customers</a></li>
+      <li class="nav-dropdown">
+        <a>Solutions</a>
+        <div class="dropdown-menu">
+          <a href="solutions/customer-churn-prevention.html">Churn Prevention<span class="dropdown-desc">Catch at-risk accounts before they leave</span></a>
+          <a href="solutions/renewal-management-software.html">Renewal Management<span class="dropdown-desc">Never miss a renewal deadline again</span></a>
+          <a href="solutions/churn-prediction-software.html">Churn Prediction<span class="dropdown-desc">AI-powered risk scoring for your portfolio</span></a>
+          <a href="solutions/customer-health-score-template.html">Health Score Template<span class="dropdown-desc">Build a health score that actually works</span></a>
+        </div>
+      </li>
       <li><a href="#roi">ROI Calculator</a></li>
       <li><a href="blog/customer-churn-prevention-guide.html">Blog</a></li>
     </ul>
